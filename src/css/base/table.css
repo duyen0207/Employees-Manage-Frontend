@@ -1,0 +1,94 @@
+/* normal data table */
+#data-table-container{
+  height: 420px;
+  border-bottom: 1px solid gray;
+
+  overflow: auto;
+
+}
+
+.header-table{
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.data-table {
+  --table-row-color: #9fb3d1;
+  --table-row-hover: #eceef1;
+
+  width: 100%;
+  border-collapse: collapse;
+  padding: 0 10px;
+}
+
+/* table row--------------------- */
+.data-table tr {
+  height: 42px;
+}
+/* table column------------------ */
+.data-table td,
+.data-table th {
+  padding: 0 4px;
+  border: 1px solid #ddd;
+}
+
+/* table header------------------- */
+.data-table .header-table {
+  height: 32px;
+
+  background-color: var(--table-row-color);
+
+  font-size: 11px;
+  text-align: left;
+}
+
+/* table data rows--------------- */
+.data-table .data-row td {
+  cursor: pointer;
+  /* background-color: gray; */
+}
+
+.data-table .data-row:hover {
+  background-color: var(--table-row-hover);
+}
+
+/* Specific column---------------- */
+.data-table .checkbox-column {
+  width: 24px;
+  padding: 0 4px;
+}
+
+.employee-code-column {
+}
+
+.fullname-column {
+}
+
+.sex-column {
+  width: 74px;
+
+  text-align: center;
+}
+
+.dob-column {
+  width: 82px;
+  text-align: center;
+}
+
+.personal-id-column {
+}
+
+.position-column {
+}
+
+.department-column {
+}
+
+.action-column {
+  position: relative;
+  text-align: center;
+}
+.data-row:hover > .action-column button {
+  background-color: var(--table-row-hover);
+}

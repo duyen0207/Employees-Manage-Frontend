@@ -1,0 +1,121 @@
+@import url("./base/variable.css");
+
+#employee-form {
+  /* display: none; */
+  padding: 16px 30px;
+  width: 70%;
+  border: solid 1px black;
+
+  background-color: #fff;
+}
+
+hr.divider {
+  margin-top: 24px;
+}
+
+/* General */
+#employee-form .normal-box > label,
+#employee-form .normal-box > input,
+#employee-form .normal-box > select {
+  width: 100%;
+  margin-top: 5px;
+}
+
+#employee-form .normal-box {
+  margin-right: 4px;
+}
+
+#employee-info,
+#personal-info {
+  width: 50%;
+}
+
+/* Form title */
+#new-employee-title {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+#new-employee-title .rows-flexbox > .horizontal-select-group {
+  margin-left: 10px;
+}
+
+#close-btn {
+  margin-left: 5px;
+}
+#close-btn:hover {
+  color: red;
+}
+
+/* Employee info */
+#employee-info {
+  margin-right: 10px;
+}
+/* ---------------------- */
+
+.div-employee-code,
+.div-id-issued-on,
+.div-birthday {
+  width: 40%;
+}
+
+.div-personal-id,
+.div-fullname {
+  width: 60%;
+}
+
+/* Personal info */
+
+.normal-box #sex-select-group {
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+}
+
+.div-sex {
+  margin-left: 4px;
+}
+
+/* action group */
+
+#form-employee-action {
+  margin-top: 10px;
+  justify-content: space-between;
+}
+
+/* Modal: confirm, delete, edit----------------------------------- */
+.notif-window {
+  height: 204px;
+  width: 424px;
+  padding: 0 20px;
+}
+.notif-text {
+  font-size: 15px;
+}
+
+.notif-msg {
+  padding: 30px 20px 40px;
+  justify-content: center;
+}
+
+.modal .notif-window {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#success-notif.notif-window {
+  width: 400px;
+}
+
+.action-btn {
+  justify-content: space-between;
+  padding: 20px 0;
+  margin-bottom: 10px;
+}
+#success-notif .action-btn {
+  justify-content: center;
+}

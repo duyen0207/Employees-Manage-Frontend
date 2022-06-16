@@ -1,0 +1,218 @@
+@import url("./variable.css");
+
+#logo-img {
+  width: 32px;
+  height: 32px;
+  margin: 0 5px;
+}
+
+.default-avatar-img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.avatar-icon-container {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: solid 1px gray;
+}
+
+/* icon */
+/* notification icon----------------------------------- */
+.notif-icon {
+  padding: 0 20px 0 0;
+  font-size: 40px;
+}
+
+.error-icon {
+  color: rgb(222, 125, 125);
+}
+.warning-icon {
+  color: yellow;
+}
+.success-icon {
+  color: green;
+}
+.question-icon {
+  color: rgb(117, 124, 229);
+}
+
+/* specific icon--------------------------------------- */
+.close-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") -89px -145px;
+  width: 22px;
+  height: 22px;
+}
+.toggle-menu-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -847px -35px;
+  width: 16px;
+  height: 14px;
+}
+.notification-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -788px -30px;
+  width: 22px;
+  height: 25px;
+}
+
+/* grid icon */
+#grid-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -428px -92px;
+  width: 16px;
+  height: 16px;
+}
+
+/* general icon */
+#general-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -33px -1630px;
+  width: 18px;
+  height: 20px;
+}
+.main-menu > .normal-box:hover #general-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -33px -1587px;
+}
+
+/* money bag icon */
+#money-bag-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -78px -1631px;
+  width: 14px;
+  height: 18px;
+}
+.main-menu > .normal-box:hover #money-bag-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -78px -1588px;
+}
+
+/* bank icon */
+#bank-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -121px -1633px;
+  width: 16px;
+  height: 16px;
+}
+.main-menu > .normal-box:hover #bank-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -121px -1590px;
+}
+
+/* shopping bag icon */
+#shopping-bag-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -165px -1632px;
+  width: 16px;
+  height: 18px;
+}
+.main-menu > .normal-box:hover #shopping-bag-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -165px -1589px;
+}
+
+/* shopping cart icon */
+#shopping-cart-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -206px -1631px;
+  width: 20px;
+  height: 18px;
+}
+.main-menu > .normal-box:hover #shopping-cart-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -206px -1588px;
+}
+
+/* bill icon */
+#bill-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -254px -1632px;
+  width: 14px;
+  height: 17px;
+}
+.main-menu > .normal-box:hover #bill-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -254px -1589px;
+}
+
+/* warehouse icon */
+#warehouse-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -294px -1632px;
+  width: 18px;
+  height: 17px;
+}
+.main-menu > .normal-box:hover #warehouse-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -294px -1589px;
+}
+
+/* tools icon */
+#tools-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -339px -1633px;
+  width: 18px;
+  height: 17px;
+}
+.main-menu > .normal-box:hover #tools-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -339px -1590px;
+}
+
+/* car icon */
+#car-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -382px -1632px;
+  width: 17px;
+  height: 18px;
+}
+.main-menu > .normal-box:hover #car-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -382px -1589px;
+}
+
+/* government house icon */
+#government-house-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -427px -1634px;
+  width: 16px;
+  height: 16px;
+}
+.main-menu > .normal-box:hover #government-house-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -427px -1591px;
+}
+
+/* price tag */
+#price-tag {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -471px -1633px;
+  width: 17px;
+  height: 17px;
+}
+.main-menu > .normal-box:hover #price-tag {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -471px -1590px;
+}
+
+/* money notebook */
+#money-notebook {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -514px -1632px;
+  width: 16px;
+  height: 18px;
+}
+.main-menu > .normal-box:hover #money-notebook {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -514px -1590px;
+  width: 15px;
+  height: 16px;
+}
+
+/* dollar circle */
+#dollar-circle {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -382px -1664px;
+  width: 16px;
+  height: 16px;
+}
+.main-menu > .normal-box:hover #dollar-circle {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -427px -1664px;
+}
+
+/* graph icon */
+#graph-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -552px -1636px;
+  width: 14px;
+  height: 13px;
+}
+.main-menu > .normal-box:hover #graph-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -552px -1593px;
+}
+
+/* analysis icon */
+#analysis-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -207px -1667px;
+
+  width: 17px;
+  height: 14px;
+}
+.main-menu > .normal-box:hover #analysis-icon {
+  background: url("../../assets/images/Sprites.64af8f61.svg") no-repeat -251px -1667px;
+}

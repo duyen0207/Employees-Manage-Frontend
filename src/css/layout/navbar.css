@@ -1,0 +1,83 @@
+.navbar {
+  /* variable----------------------- */
+  --navbar-color: #38393d;
+  --tooltip-color: #494a4b;
+  --menu-item-hover: #646464;
+
+  width: 200px;
+  flex-basis: 200px;
+  background-color: var(--navbar-color);
+}
+
+/* general css for navbar------------*/
+.navbar a {
+  color: #fff;
+  text-decoration: none;
+}
+.navbar h2 {
+  font-size: 15px;
+}
+.nav-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+
+  font-size: 20px;
+}
+
+/* navbar header------------------ */
+.navbar-header {
+  position: sticky;
+
+  height: 46px;
+}
+
+.navbar-header #grid-icon {
+  margin-left: 28px;
+  margin-right: 5px;
+}
+.logo-container {
+  width: 96px;
+}
+
+/* menu item--------------------- */
+.main-menu {
+  height: calc(100vh - 48px);
+}
+.main-menu li.normal-box{
+  list-style-type: none;
+}
+
+.main-menu > .normal-box:hover,
+.main-menu > .normal-box:focus {
+  position: relative;
+  background-color: var(--menu-item-hover);
+}
+
+.main-menu > .normal-box:hover>.tooltip {
+  visibility: visible;
+
+}
+
+.main-menu .menu-item-link {
+  height: 42px;
+  padding: 0 14px 0 8px;
+  border: solid var(--navbar-color);
+  border-width: 0 0 0 6px;
+}
+.main-menu > .normal-box:hover .menu-item-link {
+  border-color: var(--menu-item-hover);
+}
+
+/* scroll bar----------------------- */
+.main-menu::-webkit-scrollbar {
+  width: 8px;
+  height: 10px;
+}
+
+.main-menu::-webkit-scrollbar-thumb {
+  background: #b8bcc3;
+}
+.main-menu::-webkit-scrollbar-track {
+  background: #fff;
+}

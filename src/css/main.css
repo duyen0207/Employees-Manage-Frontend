@@ -1,0 +1,44 @@
+@import url(./base/button.css);
+@import url(./base/input.css);
+@import url(./base/table.css);
+@import url(./base/combobox.css);
+@import url(./base/image-icon.css);
+@import url(./base/container-box.css);
+
+/* @import url(./layout/content.css); */
+/* @import url(./layout/header.css); */
+/* @import url(./layout/navbar.css); */
+
+@import url(./employees.css);
+
+@font-face {
+  font-family: MISA Fonts Regular;
+  src: url(../assets/fonts/notosans-regular.2cb88a13.woff2);
+}
+
+@font-face {
+  font-family: MISA Fonts Bold;
+  src: url(../assets/fonts/notosans-bold.3ede5aff.woff2);
+}
+
+@font-face {
+  font-family: MISA Fonts Italic;
+  src: url(../assets/fonts/notosans-italic.1c1aaac9.woff2);
+}
+
+body {
+  position: relative;
+
+  font-family: MISA Fonts Regular;
+  font-size: 13px;
+}
+
+html,
+body,
+body > div.rows-flexbox {
+  /* background-color: gray; */
+  height: 100%;
+}
+.main {
+  width: 100%;
+}

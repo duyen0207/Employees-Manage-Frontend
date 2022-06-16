@@ -1,0 +1,34 @@
+.header {
+  /* background-color: violet; */
+  width: 100%;
+  height: 46px;
+  padding: 0 16px;
+}
+
+.header.rows-flexbox {
+  justify-content: space-between;
+}
+
+.header .toggle-menu-icon {
+  margin-right: 16px;
+}
+
+/* company name */
+.company-name,
+.header .toggle-menu-icon,
+.notification-icon,
+.user-toggle {
+  cursor: pointer;
+}
+
+.company-name > h4 {
+  margin-right: 4px;
+}
+
+.header .notification-icon {
+    margin-right: 24px;
+}
+/* user toggle */
+.user-toggle .username {
+    margin-left: 4px;
+}

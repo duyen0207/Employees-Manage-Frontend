@@ -1,0 +1,12 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+html {
+    --primary-color: #01b075;
+    --hover-color: #2fbe8e;
+    --default-color: #019160;
+    --focus-color: #ebf9f4;
+}

@@ -1,0 +1,96 @@
+/* This file css for label and input */
+
+
+.input-disabled {
+  background-color: rgb(216, 248, 216);
+  color: rgb(107, 105, 105);
+  cursor: not-allowed;
+}
+
+/* Primary input */
+.primary-input {
+  height: 32px;
+  margin: 3px 2px;
+  padding: 6px;
+
+  border: solid 1px #bbb;
+  border-radius: 5px;
+  border-width: 1px;
+  border-color: #bbb;
+
+  /* color: #000; */
+
+  font-size: 12px;
+
+  outline: none;
+}
+
+.primary-input:focus {
+  border-color: var(--default-color);
+}
+
+::placeholder {
+  color: #bbb;
+
+  font-size: 12px;
+}
+
+/* Icon input------------------------------ */
+.icon-input {
+  width: 280px;
+  padding-left: 40px;
+  border-radius: 4px;
+
+  background: var(--icon-url);
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  background-position: 16px center;
+}
+
+/* Label-------------------------------*/
+.top-label {
+  display: block;
+}
+
+.compulsory-label::after {
+  content: " *";
+  color: red;
+}
+
+/* Select--------------------------------- */
+
+.horizontal-select-group > input {
+  margin-right: 4px;
+}
+.horizontal-select-group > label {
+  margin-right: 15px;
+}
+
+.wrong-input {
+  border: 1px solid red;
+}
+
+.tool-tip-container {
+  position: relative;
+}
+
+.wrong-notif-tooltip {
+  visibility: hidden;
+  /* display: none; */
+
+  position: absolute;
+  right: 0;
+  bottom: -1;
+  z-index: 100;
+
+  display: block;
+  min-width: 100px;
+  padding: 3px 5px;
+  border-radius: 4px;
+
+  background-color: #4f4f4f;
+  color: #fff;
+
+  font-size: 12px;
+  text-align: center;
+}
