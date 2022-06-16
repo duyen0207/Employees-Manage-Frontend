@@ -12,11 +12,12 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import {
   faUserSecret,
   faArrowRotateRight,
-  faAngleDown
+  faAngleDown,
+  faCaretDown,
 } from "@fortawesome/free-solid-svg-icons";
 
 /* add icons to the library */
-library.add(faUserSecret, faArrowRotateRight, faAngleDown);
+library.add(faUserSecret, faArrowRotateRight, faAngleDown, faCaretDown);
 
 createApp(App)
   .use(store)

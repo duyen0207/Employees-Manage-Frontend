@@ -45,7 +45,45 @@
                     <th class="action-column">CHỨC NĂNG</th>
                   </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                  <tr v-for="emp in employees" :key="emp.EmployeeId">
+                    <td id="{{emp.EmployeeCode}}" class="checkbox-column">
+                      <input type="checkbox" name="" id="" class="check-item" />
+                    </td>
+                    <td class="employee-code-column">{{emp.EmployeeCode}}</td>
+                    <td class="fullname-column">{{emp.EmployeeName}}</td>
+                    <td class="sex-column">{{emp.GenderName}}</td>
+                    <td class="dob-column">{{emp.DateOfBirth}}</td>
+                    <td class="personal-id-column">{{emp.IdentityNumber}}</td>
+                    <td class="position-column">{{emp.Position}}</td>
+                    <td class="department-column">{{emp.DepartmentName}}</td>
+                    <td class="action-column">
+                    <button
+                        data-employee-id="{{emp.EmployeeId}}"
+                        class="none-btn edit-employee-btn"
+                        style="color: rgb(56, 148, 234)"
+                    >
+                        Sửa
+                    </button>
+                    <span class="action-combobox">
+                      <button class="select-selected border-icon-combobox">
+                        <font-awesome-icon icon="fa-solid fa-caret-down"></font-awesome-icon>
+                      </button>
+                      <ul class="select-items">
+                        <li>Nhân bản</li>
+                        <li class="delete-em-btn" 
+                          data-option="delete" 
+                          data-employee-code="{{emp.EmployeeCode}}"
+                          data-employee-id="{{emp.EmployeeId}}">
+                          Xóa
+                        </li>
+                        <li>Ngừng sử dụng</li>
+                      </ul>
+                    </span>
+                    </td>
+
+                  </tr>
+                </tbody>
               </table>
             </div>
           </div>
@@ -54,6 +92,9 @@
 <script>
 export default {
   name: "TheContent",
+  props: {
+    employees:Array,
+  }
 };
 </script>
 <style lang="css">
