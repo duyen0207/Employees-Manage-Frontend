@@ -6,7 +6,7 @@
             <div class="company-name">
               <h4>
                 CÔNG TY TNHH SẢN XUẤT - THƯƠNG MẠI - DỊCH VỤ QUI PHÚC
-                <i class="fa-solid fa-angle-down"></i>
+                <font-awesome-icon icon="fa-solid fa-angle-down"></font-awesome-icon>
               </h4>
             </div>
           </div>
@@ -23,7 +23,8 @@
               </div>
               <div class="username">
                 Nguyễn Văn Mạnh
-                <i class="fa-solid fa-angle-down"></i>
+                <font-awesome-icon icon="fa-solid fa-angle-down"></font-awesome-icon>
+
               </div>
             </div>
           </div>

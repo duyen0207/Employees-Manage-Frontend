@@ -15,14 +15,11 @@
               <input
                 id="input-search-employee"
                 class="primary-input icon-input"
-                style="
-                  --icon-url: url('../../assets/images/icons/search-line.png');
-                "
                 type="text"
                 placeholder="Tìm kiếm theo mã, tên nhân viên"
               />
               <button id="reload-data" class="none-btn">
-                <i class="fa-solid fa-arrow-rotate-right"></i>
+                <font-awesome-icon icon="fa-solid fa-arrow-rotate-right" />
               </button>
             </div>
             <!-- Data table ------------------------------------------->

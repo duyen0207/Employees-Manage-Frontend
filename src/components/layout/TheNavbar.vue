@@ -7,7 +7,7 @@
           </a>
           <a href="/" class="logo-container rows-flexbox">
 
-            <img id="logo-img" src="favicon.ico" alt="Amis Logo" />
+            <img id="logo-img" src="../../assets/images/icons/search-line.png" alt="Amis Logo" />
             <h2>Kế toán</h2>
           </a>
         </div>
