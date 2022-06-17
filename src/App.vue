@@ -1,16 +1,20 @@
 <template>
   <router-view />
   <div>
+    
 
   </div>
 </template>
 
 <script>
-import AppButton from "@/components/base/Button.vue";
+import DButton from "@/components/base/Button.vue";
+// import Dialog from "@/components/base/Dialog.vue";
+
 export default {
   name: "App",
   components: {
-    AppButton,
+    DButton,
+    // Dialog,
   },
 };
 </script>

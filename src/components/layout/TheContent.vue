@@ -53,7 +53,7 @@
                     <td class="employee-code-column">{{emp.EmployeeCode}}</td>
                     <td class="fullname-column">{{emp.EmployeeName}}</td>
                     <td class="sex-column">{{emp.GenderName}}</td>
-                    <td class="dob-column">{{emp.DateOfBirth}}</td>
+                    <td class="dob-column">{{formatDate(emp.DateOfBirth)}}</td>
                     <td class="personal-id-column">{{emp.IdentityNumber}}</td>
                     <td class="position-column">{{emp.Position}}</td>
                     <td class="department-column">{{emp.DepartmentName}}</td>
@@ -92,9 +92,22 @@
 <script>
 export default {
   name: "TheContent",
+  methods: {
+    /**
+     * chuẩn hóa ngày dưới dạng dd/mm/yyyy
+     */
+    formatDate(date) {
+      if (date) {
+        let formatDate = new Date(date);
+        formatDate = formatDate.toLocaleDateString("en-GB");
+        return formatDate;
+      }
+      return "";
+    },
+  },
   props: {
-    employees:Array,
-  }
+    employees: Array,
+  },
 };
 </script>
 <style lang="css">

@@ -14,10 +14,20 @@ import {
   faArrowRotateRight,
   faAngleDown,
   faCaretDown,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 
+import {faCircleQuestion} from "@fortawesome/free-regular-svg-icons"
+
 /* add icons to the library */
-library.add(faUserSecret, faArrowRotateRight, faAngleDown, faCaretDown);
+library.add(
+  faUserSecret,
+  faArrowRotateRight,
+  faAngleDown,
+  faCaretDown,
+  faCircleQuestion,
+  faXmark,
+);
 
 createApp(App)
   .use(store)
