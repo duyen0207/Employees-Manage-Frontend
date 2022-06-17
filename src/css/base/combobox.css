@@ -27,7 +27,7 @@
 }
 
 .action-combobox .select-items {
-  display: none;
+  /* display: none; */
 
   position: absolute;
   top: calc(100% + 2px);

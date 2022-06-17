@@ -1,432 +1,461 @@
 <template lang="">
+  <div class="content">
+    <!-- Content header ----------------------------------------------->
+    <div class="content-header rows-flexbox">
+      <h2 class="content-title">Nhân viên</h2>
+      <button
+        @click="btnShowForm(null)"
+        id="add-new-emp-btn"
+        class="primary-btn"
+      >
+        Thêm mới nhân viên
+      </button>
+    </div>
+
+    <!-- Main content ----------------------------------------------->
     <div class="content">
-          <!-- Content header ----------------------------------------------->
-          <div class="content-header rows-flexbox">
-            <h2 class="content-title">Nhân viên</h2>
-            <button @click="btnShowForm" id="add-new-emp-btn" class="primary-btn">
-              Thêm mới nhân viên
-            </button>
-          </div>
-
-          <!-- Main content ----------------------------------------------->
-          <div class="content">
-            <!-- search input and reload button----------------------->
-            <div class="content-header rows-flexbox">
-              <input
-                id="input-search-employee"
-                class="primary-input icon-input"
-                type="text"
-                placeholder="Tìm kiếm theo mã, tên nhân viên"
-              />
-              <button id="reload-data" class="none-btn">
-                <font-awesome-icon icon="fa-solid fa-arrow-rotate-right" />
-              </button>
-            </div>
-            <!-- Data table ------------------------------------------->
-            <div id="data-table-container" class="normal-box">
-              <table id="employees-data-table" class="data-table">
-                <thead class="header-table">
-                  <tr>
-                    <th class="checkbox-column">
-                      <input type="checkbox" class="check-all" />
-                    </th>
-                    <th class="employee-code-column">MÃ NHÂN VIÊN</th>
-                    <th class="fullname-column">TÊN NHÂN VIÊN</th>
-                    <th class="sex-column">GIỚI TÍNH</th>
-                    <th class="dob-column">NGÀY SINH</th>
-                    <th
-                      class="personal-id-column"
-                      title="Số chứng minh nhân dân"
-                    >
-                      SỐ CMND
-                    </th>
-                    <th class="position-column">CHỨC DANH</th>
-                    <th class="department-column">TÊN ĐƠN VỊ</th>
-                    <th class="action-column">CHỨC NĂNG</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="emp in employees" :key="emp.EmployeeId">
-                    <td :id="emp.EmployeeId" class="checkbox-column">
-                      <input type="checkbox" name="" id="" class="check-item" />
-                    </td>
-                    <td class="employee-code-column">{{emp.EmployeeCode}}</td>
-                    <td class="fullname-column">{{emp.EmployeeName}}</td>
-                    <td class="sex-column">{{emp.GenderName}}</td>
-                    <td class="dob-column">{{formatDate(emp.DateOfBirth)}}</td>
-                    <td class="personal-id-column">{{emp.IdentityNumber}}</td>
-                    <td class="position-column">{{emp.Position}}</td>
-                    <td class="department-column">{{emp.DepartmentName}}</td>
-                    <td class="action-column">
-                    <button
-                        data-employee-id="{{emp.EmployeeId}}"
-                        class="none-btn edit-employee-btn"
-                        style="color: rgb(56, 148, 234)"
-                        @click="btnSaveOnClick(emp.EmployeeId)"
-                    >
-                        Sửa
-                    </button>
-                    <span class="action-combobox">
-                      <button class="select-selected border-icon-combobox">
-                        <font-awesome-icon icon="fa-solid fa-caret-down"></font-awesome-icon>
-                      </button>
-                      <ul class="select-items">
-                        <li>Nhân bản</li>
-                        <li class="delete-em-btn" 
-                          data-option="delete" 
-                          data-employee-code="{{emp.EmployeeCode}}"
-                          data-employee-id="{{emp.EmployeeId}}">
-                          Xóa
-                        </li>
-                        <li>Ngừng sử dụng</li>
-                      </ul>
-                    </span>
-                    </td>
-
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-                <!-- Form -->
-      <div id="form-container">
-        <div v-show="isShowForm" class="modal">
-          <form
-            action=""
-            method="post"
-            id="employee-form"
-            class="modal-content animate"
-          >
-            <div id="new-employee-container">
-              <!-- Form title ------------------------>
-              <div id="new-employee-title" class="rows-flexbox">
-                <div class="rows-flexbox">
-                  <h2>Thông tin nhân viên</h2>
-
-                  <div class="horizontal-select-group">
-                    <input type="checkbox" id="isCustomer" />
-                    <label for="isCustomer">Là khách hàng</label>
-                    <input type="checkbox" id="isProvider" />
-                    <label for="isProvider">Là nhà cung cấp</label>
-                  </div>
-                </div>
-                <!-- help + close --------------------->
-                <div class="normal-box">
-                  <button type="button" id="help-btn" class="icon">
-                    <font-awesome-icon icon="fa-regular fa-circle-question"></font-awesome-icon>
-                  </button>
-                  <button
-                    type="button"
-                    id="close-btn"
-                    class="icon"
-                    @click="btnOnCloseForm"
+      <!-- search input and reload button----------------------->
+      <div class="content-header rows-flexbox">
+        <input
+          id="input-search-employee"
+          class="primary-input icon-input"
+          type="text"
+          placeholder="Tìm kiếm theo mã, tên nhân viên"
+        />
+        <button id="reload-data" class="none-btn">
+          <font-awesome-icon icon="fa-solid fa-arrow-rotate-right" />
+        </button>
+      </div>
+      <!-- Data table ------------------------------------------->
+      <div id="data-table-container" class="normal-box">
+        <table id="employees-data-table" class="data-table">
+          <thead class="header-table">
+            <tr>
+              <th class="checkbox-column">
+                <input type="checkbox" class="check-all" />
+              </th>
+              <th class="employee-code-column">MÃ NHÂN VIÊN</th>
+              <th class="fullname-column">TÊN NHÂN VIÊN</th>
+              <th class="sex-column">GIỚI TÍNH</th>
+              <th class="dob-column">NGÀY SINH</th>
+              <th class="personal-id-column" title="Số chứng minh nhân dân">
+                SỐ CMND
+              </th>
+              <th class="position-column">CHỨC DANH</th>
+              <th class="department-column">TÊN ĐƠN VỊ</th>
+              <th class="action-column">CHỨC NĂNG</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="emp in employees" :key="emp.EmployeeId">
+              <td :id="emp.EmployeeId" class="checkbox-column">
+                <input type="checkbox" name="" id="" class="check-item" />
+              </td>
+              <td class="employee-code-column">{{ emp.EmployeeCode }}</td>
+              <td class="fullname-column">{{ emp.EmployeeName }}</td>
+              <td class="sex-column">{{ emp.GenderName }}</td>
+              <td class="dob-column">{{ formatDate(emp.DateOfBirth) }}</td>
+              <td class="personal-id-column">{{ emp.IdentityNumber }}</td>
+              <td class="position-column">{{ emp.Position }}</td>
+              <td class="department-column">{{ emp.DepartmentName }}</td>
+              <td class="action-column">
+                <button
+                  data-employee-id="{{emp.EmployeeId}}"
+                  class="none-btn edit-employee-btn"
+                  style="color: rgb(56, 148, 234)"
+                  @click="btnShowForm(emp.EmployeeId)"
+                >
+                  Sửa
+                </button>
+                <span class="action-combobox">
+                  <button class="select-selected border-icon-combobox"
+                    @click="showCombobox"
                   >
-                    <font-awesome-icon icon="fa-solid fa-xmark" />
-                    <!-- <font-awesome-icon icon="fa-solid fa-xmark" /> -->
+                    <font-awesome-icon
+                      icon="fa-solid fa-caret-down"
+                    ></font-awesome-icon>
                   </button>
+                  <ul class="select-items"
+                    v-show="isShowCombobox"
+                  >
+                    <li>Nhân bản</li>
+                    <li
+                      class="delete-em-btn"
+                      @click="btnDeleteOnClick(emp.EmployeeId)"
+                    >
+                      Xóa
+                    </li>
+                    <li>Ngừng sử dụng</li>
+                  </ul>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Form -->
+    <div id="form-container">
+      <div v-show="isShowForm" class="modal">
+        <form
+          action=""
+          method="post"
+          id="employee-form"
+          class="modal-content animate"
+        >
+          <div id="new-employee-container">
+            <!-- Form title ------------------------>
+            <div id="new-employee-title" class="rows-flexbox">
+              <div class="rows-flexbox">
+                <h2>Thông tin nhân viên</h2>
+
+                <div class="horizontal-select-group">
+                  <input type="checkbox" id="isCustomer" />
+                  <label for="isCustomer">Là khách hàng</label>
+                  <input type="checkbox" id="isProvider" />
+                  <label for="isProvider">Là nhà cung cấp</label>
                 </div>
               </div>
+              <!-- help + close --------------------->
+              <div class="normal-box">
+                <button type="button" id="help-btn" class="icon">
+                  <font-awesome-icon
+                    icon="fa-regular fa-circle-question"
+                  ></font-awesome-icon>
+                </button>
+                <button
+                  type="button"
+                  id="close-btn"
+                  class="icon"
+                  @click="btnOnCloseForm"
+                >
+                  <font-awesome-icon icon="fa-solid fa-xmark" />
+                  <!-- <font-awesome-icon icon="fa-solid fa-xmark" /> -->
+                </button>
+              </div>
+            </div>
 
-              <!-- Form content ----------------------------->
-              <div id="new-employee-content">
-                <div class="rows-flexbox">
-                  <!-- EMPLOYEE INFO. 
+            <!-- Form content ----------------------------->
+            <div id="new-employee-content">
+              <div class="rows-flexbox">
+                <!-- EMPLOYEE INFO. 
                       ex: employee-code, department, position
                       -->
-                  <div class="" id="employee-info">
-                    <div class="rows-flexbox">
-                      <div class="normal-box div-employee-code">
-                        <label
-                          for="employee-code"
-                          class="compulsory-label top-label"
-                        >
-                          Mã
-                        </label>
-                        <input
-                          type="text"
-                          id="employee-code"
-                          class="primary-input"
-                          placeholder="NV-0001"
-                          autofocus
-                          v-model="formData.EmployeeCode"
-                          required
-                        />
-                        <div class="tool-tip-container">
-                          <div class="wrong-notif-tooltip">
-                            Mã nhân viên không được để trống
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="normal-box div-fullname">
-                        <label
-                          for="employee-name"
-                          class="compulsory-label top-label"
-                          >Tên</label
-                        >
-                        <input
-                          type="text"
-                          id="employee-name"
-                          class="primary-input"
-                          placeholder="Nguyễn Văn A"
-                          v-model="formData.EmployeeName"
-
-                          required
-                        />
-                        <div class="tool-tip-container">
-                          <div class="wrong-notif-tooltip">
-                            Tên không được để trống.
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="normal-box">
+                <div class="" id="employee-info">
+                  <div class="rows-flexbox">
+                    <div class="normal-box div-employee-code">
                       <label
-                        for="department-id"
+                        for="employee-code"
                         class="compulsory-label top-label"
-                        >Đơn vị</label
                       >
-                      <select id="department-id" class="primary-input" required
-                      v-model="formData.DepartmentId"
-                      >
-                        <option value="142cb08f-7c31-21fa-8e90-67245e8b283e">
-                          Phòng nhân sự
-                        </option>
-                        <option value="17120d02-6ab5-3e43-18cb-66948daf6128">
-                          Phòng tuyển sinh
-                        </option>
-                        <option value="469b3ece-744a-45d5-957d-e8c757976496">
-                          Phòng sản xuất
-                        </option>
-                        <option value="4e272fc4-7875-78d6-7d32-6a1673ffca7c">
-                          Phòng đào tạo
-                        </option>
-                      </select>
+                        Mã
+                      </label>
+                      <input
+                        type="text"
+                        id="employee-code"
+                        class="primary-input"
+                        placeholder="NV-0001"
+                        autofocus
+                        v-model="formData.EmployeeCode"
+                        required
+                      />
                       <div class="tool-tip-container">
                         <div class="wrong-notif-tooltip">
-                          Đơn vị không được để trống
+                          Mã nhân viên không được để trống
                         </div>
                       </div>
                     </div>
-                    <div class="normal-box">
-                      <label for="employee-position" class="top-label"
-                        >Chức danh</label
+
+                    <div class="normal-box div-fullname">
+                      <label
+                        for="employee-name"
+                        class="compulsory-label top-label"
+                        >Tên</label
                       >
                       <input
                         type="text"
-                        id="employee-position"
+                        id="employee-name"
                         class="primary-input"
-                        placeholder="Nhân viên"
-                        v-model="formData.Position"
+                        placeholder="Nguyễn Văn A"
+                        v-model="formData.EmployeeName"
+                        required
                       />
+                      <div class="tool-tip-container">
+                        <div class="wrong-notif-tooltip">
+                          Tên không được để trống.
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <!-- PERSONAL INFO. 
-                      ex: birthday, sex, etc.
-                      -->
-                  <div class="" id="personal-info">
-                    <div class="rows-flexbox">
-                      <div class="normal-box div-birthday">
-                        <label for="birthday" class="top-label">Ngày sinh</label>
-                        <input type="date" id="birthday" class="primary-input" 
-                          v-model="formData.DateOfBirth"
-                        />
-                        <div class="tool-tip-container">
-                          <div class="wrong-notif-tooltip">
-                            Ngày sinh không hợp lệ
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="normal-box div-sex">
-                        <label for="" class="top-label">Giới tính</label>
-                        <div
-                          id="sex-select-group"
-                          class="horizontal-select-group"
-                        >
-                          <input
-                            name="gender"
-                            type="radio"
-                            value="1"
-                            id="male"
-                            class=""
-                            v-model="formData.Gender"
-                          />
-                          <label for="male">Nam</label>
-
-                          <input
-                            name="gender"
-                            type="radio"
-                            value="2"
-                            id="female"
-                            class=""
-                            v-model="formData.Gender"
-                          />
-                          <label for="female">Nữ</label>
-
-                          <input
-                            name="gender"
-                            type="radio"
-                            value="3"
-                            id="other-gender"
-                            class=""
-                            v-model="formData.Gender"
-                          />
-                          <label for="other-gender">Khác</label>
-                        </div>
+                  <div class="normal-box">
+                    <label
+                      for="department-id"
+                      class="compulsory-label top-label"
+                      >Đơn vị</label
+                    >
+                    <select
+                      id="department-id"
+                      class="primary-input"
+                      required
+                      v-model="formData.DepartmentId"
+                    >
+                      <option value="142cb08f-7c31-21fa-8e90-67245e8b283e">
+                        Phòng nhân sự
+                      </option>
+                      <option value="17120d02-6ab5-3e43-18cb-66948daf6128">
+                        Phòng tuyển sinh
+                      </option>
+                      <option value="469b3ece-744a-45d5-957d-e8c757976496">
+                        Phòng sản xuất
+                      </option>
+                      <option value="4e272fc4-7875-78d6-7d32-6a1673ffca7c">
+                        Phòng đào tạo
+                      </option>
+                    </select>
+                    <div class="tool-tip-container">
+                      <div class="wrong-notif-tooltip">
+                        Đơn vị không được để trống
                       </div>
                     </div>
-
-                    <div class="rows-flexbox">
-                      <div class="normal-box div-personal-id">
-                        <label for="identity-number" class="top-label"
-                          >Số CMND</label
-                        >
-                        <input
-                          type="text"
-                          id="identity-number"
-                          class="primary-input"
-                          v-model="formData.IdentityNumber"
-                        />
-                      </div>
-
-                      <div class="normal-box div-id-issued-on">
-                        <label for="identity-date" class="top-label"
-                          >Ngày cấp</label
-                        >
-                        <input
-                          type="date"
-                          id="identity-date"
-                          class="primary-input"
-                          v-model="formData.IdentityDate"
-                        />
-                        <div class="tool-tip-container">
-                          <div class="wrong-notif-tooltip">
-                            Ngày cấp CMND không hợp lệ
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="normal-box">
-                      <label for="identity-place" class="top-label"
-                        >Nơi cấp</label
-                      >
-                      <input
-                        type="text"
-                        id="identity-place"
-                        class="primary-input"
-                        v-model="formData.IdentityPlace"
-                      />
-                    </div>
+                  </div>
+                  <div class="normal-box">
+                    <label for="employee-position" class="top-label"
+                      >Chức danh</label
+                    >
+                    <input
+                      type="text"
+                      id="employee-position"
+                      class="primary-input"
+                      placeholder="Nhân viên"
+                      v-model="formData.Position"
+                    />
                   </div>
                 </div>
-                <!-- ADDRESS -->
+
+                <!-- PERSONAL INFO. 
+                      ex: birthday, sex, etc.
+                      -->
+                <div class="" id="personal-info">
+                  <div class="rows-flexbox">
+                    <div class="normal-box div-birthday">
+                      <label for="birthday" class="top-label">Ngày sinh</label>
+                      <input
+                        type="date"
+                        id="birthday"
+                        class="primary-input"
+                        v-model="formData.DateOfBirth"
+                      />
+                      <div class="tool-tip-container">
+                        <div class="wrong-notif-tooltip">
+                          Ngày sinh không hợp lệ
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="normal-box div-sex">
+                      <label for="" class="top-label">Giới tính</label>
+                      <div
+                        id="sex-select-group"
+                        class="horizontal-select-group"
+                      >
+                        <input
+                          name="gender"
+                          type="radio"
+                          value="1"
+                          id="male"
+                          class=""
+                          v-model="formData.Gender"
+                        />
+                        <label for="male">Nam</label>
+
+                        <input
+                          name="gender"
+                          type="radio"
+                          value="2"
+                          id="female"
+                          class=""
+                          v-model="formData.Gender"
+                        />
+                        <label for="female">Nữ</label>
+
+                        <input
+                          name="gender"
+                          type="radio"
+                          value="3"
+                          id="other-gender"
+                          class=""
+                          v-model="formData.Gender"
+                        />
+                        <label for="other-gender">Khác</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="rows-flexbox">
+                    <div class="normal-box div-personal-id">
+                      <label for="identity-number" class="top-label"
+                        >Số CMND</label
+                      >
+                      <input
+                        type="text"
+                        id="identity-number"
+                        class="primary-input"
+                        v-model="formData.IdentityNumber"
+                      />
+                    </div>
+
+                    <div class="normal-box div-id-issued-on">
+                      <label for="identity-date" class="top-label"
+                        >Ngày cấp</label
+                      >
+                      <input
+                        type="date"
+                        id="identity-date"
+                        class="primary-input"
+                        v-model="formData.IdentityDate"
+                      />
+                      <div class="tool-tip-container">
+                        <div class="wrong-notif-tooltip">
+                          Ngày cấp CMND không hợp lệ
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="normal-box">
+                    <label for="identity-place" class="top-label"
+                      >Nơi cấp</label
+                    >
+                    <input
+                      type="text"
+                      id="identity-place"
+                      class="primary-input"
+                      v-model="formData.IdentityPlace"
+                    />
+                  </div>
+                </div>
+              </div>
+              <!-- ADDRESS -->
+              <div class="normal-box">
+                <label for="address" class="top-label">Địa chỉ</label>
+                <input
+                  type="text"
+                  id="address"
+                  class="primary-input"
+                  v-model="formData.Address"
+                />
+              </div>
+
+              <!-- CONTACT INFO
+                  ex: phone number, email -->
+              <div id="contact" class="rows-flexbox">
                 <div class="normal-box">
-                  <label for="address" class="top-label">Địa chỉ</label>
-                  <input type="text" id="address" class="primary-input" 
-                    v-model="formData.Address"
+                  <label for="mobile-phone" class="top-label">ĐT di động</label>
+                  <input
+                    type="text"
+                    id="mobile-phone"
+                    class="primary-input"
+                    v-model="formData.PhoneNumber"
                   />
                 </div>
 
-                <!-- CONTACT INFO
-                  ex: phone number, email -->
-                <div id="contact" class="rows-flexbox">
-                  <div class="normal-box">
-                    <label for="mobile-phone" class="top-label">ĐT di động</label>
-                    <input type="text" id="mobile-phone" class="primary-input" 
-                      v-model="formData.PhoneNumber"
-                    />
-                  </div>
+                <div class="normal-box">
+                  <label for="telephone" class="top-label">ĐT cố định</label>
+                  <input
+                    type="text"
+                    id="telephone"
+                    class="primary-input"
+                    v-model="formData.TelephoneNumber"
+                  />
+                </div>
 
-                  <div class="normal-box">
-                    <label for="telephone" class="top-label">ĐT cố định</label>
-                    <input type="text" id="telephone" class="primary-input" 
-                      v-model="formData.TelephoneNumber"
-                    />
-                  </div>
-
-                  <div class="normal-box">
-                    <label for="email" class="top-label">Email</label>
-                    <input type="email" id="email" class="primary-input" 
-                      v-model="formData.Email"
-                      
-                    />
-                    <div class="tool-tip-container">
-                      <div class="wrong-notif-tooltip">
-                        Email không đúng định dạng
-                      </div>
+                <div class="normal-box">
+                  <label for="email" class="top-label">Email</label>
+                  <input
+                    type="email"
+                    id="email"
+                    class="primary-input"
+                    v-model="formData.Email"
+                  />
+                  <div class="tool-tip-container">
+                    <div class="wrong-notif-tooltip">
+                      Email không đúng định dạng
                     </div>
                   </div>
                 </div>
-
-                <!-- BANK INFO
-                  ex: account, name, branch -->
-                <div id="bank-info" class="rows-flexbox">
-                  <div class="normal-box">
-                    <label for="bank-account" class="top-label"
-                      >Tài khoản ngân hàng</label
-                    >
-                    <input type="text" id="bank-account" class="primary-input" 
-                      v-model="formData.BankAccountNumber"
-
-                    />
-                  </div>
-
-                  <div class="normal-box">
-                    <label for="bank-name" class="top-label">Tên ngân hàng</label>
-                    <input type="text" id="bank-name" class="primary-input" 
-                      v-model="formData.BankName"
-
-                    />
-                  </div>
-
-                  <div class="normal-box">
-                    <label for="bank-branch" class="top-label">Chi nhánh</label>
-                    <input type="text" id="bank-branch" class="primary-input" 
-                      v-model="formData.BankBranchName"
-
-                    />
-                  </div>
-                </div>
               </div>
 
-              <hr class="divider" />
-
-              <!-- ACTION GROUP WITH FORM
-                  ex: add, cancel, etc. -->
-              <div id="form-employee-action" class="rows-flexbox">
-                <button
-                  type="button"
-                  id="cancel-btn"
-                  class="primary-btn second-btn"
-                  @click="btnOnCloseForm"
-                >
-                  Hủy
-                </button>
-
-                <div class="horizontal-group-btn">
-                  <button
-                    id="add-edit-btn"
-                    type="button"
-                    class="primary-btn second-btn"
-                    @click="btnSaveOnClick(null)"
+              <!-- BANK INFO
+                  ex: account, name, branch -->
+              <div id="bank-info" class="rows-flexbox">
+                <div class="normal-box">
+                  <label for="bank-account" class="top-label"
+                    >Tài khoản ngân hàng</label
                   >
-                    Cất
-                  </button>
-                  <button id="add-multi-btn" type="button" class="primary-btn">
-                    Cất và thêm
-                  </button>
+                  <input
+                    type="text"
+                    id="bank-account"
+                    class="primary-input"
+                    v-model="formData.BankAccountNumber"
+                  />
+                </div>
+
+                <div class="normal-box">
+                  <label for="bank-name" class="top-label">Tên ngân hàng</label>
+                  <input
+                    type="text"
+                    id="bank-name"
+                    class="primary-input"
+                    v-model="formData.BankName"
+                  />
+                </div>
+
+                <div class="normal-box">
+                  <label for="bank-branch" class="top-label">Chi nhánh</label>
+                  <input
+                    type="text"
+                    id="bank-branch"
+                    class="primary-input"
+                    v-model="formData.BankBranchName"
+                  />
                 </div>
               </div>
             </div>
-          </form>
-        </div>
-      </div>
 
-        </div>
+            <hr class="divider" />
+
+            <!-- ACTION GROUP WITH FORM
+                  ex: add, cancel, etc. -->
+            <div id="form-employee-action" class="rows-flexbox">
+              <button
+                type="button"
+                id="cancel-btn"
+                class="primary-btn second-btn"
+                @click="btnOnCloseForm"
+              >
+                Hủy
+              </button>
+
+              <div class="horizontal-group-btn">
+                <button
+                  id="add-edit-btn"
+                  type="button"
+                  class="primary-btn second-btn"
+                  @click="btnSaveOnClick(null)"
+                >
+                  Cất
+                </button>
+                <button id="add-multi-btn" type="button" class="primary-btn">
+                  Cất và thêm
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 import axios from "axios";
@@ -447,19 +476,32 @@ const Action = {
   GET_INFO: 4,
 };
 
+const DIALOG = {
+  // validate
+  ERROR: 0,
+  // add success, edit success, delete success
+  SUCCESS: 1,
+  // confirm delete, confirm edit
+  CONFIRM: 2,
+};
+
 export default {
   name: "TheContent",
   data() {
     return {
-      isShowForm: false,
-      apiMethod: "post",
       employees: [],
+
+      isShowForm: false,
+      isShowDialog: false,
+      isShowCombobox: false,
+
+      apiMethod: "post",
       formData: {
         EmployeeCode: "Hello",
         EmployeeName: "Tên",
         DepartmentId: "142cb08f-7c31-21fa-8e90-67245e8b283e",
         DepartmentName: "tên đơn vị",
-        Position: "vị trí",
+        Position: "Nhân Viên",
 
         DateOfBirth: null,
         Gender: "1",
@@ -481,20 +523,27 @@ export default {
   },
   methods: {
     /**
-     * chuẩn hóa ngày dưới dạng dd/mm/yyyy
+     * chuẩn hóa ngày theo format
+     * default: dd/mm/yyyy
      */
-    formatDate(date) {
+    formatDate(date, type = "en-GB") {
       if (date) {
         let formatDate = new Date(date);
-        formatDate = formatDate.toLocaleDateString("en-GB");
+        formatDate = formatDate.toLocaleDateString(type);
         return formatDate;
       }
       return "";
     },
 
+    // hiển thị tùy chọn combobox
+    showCombobox() {
+      this.isShowCombobox = true;
+    },
+
     // empty table
     emptyTable() {
-      $("#employees-data-table tbody").empty();
+      console.log("ĐANG EMPTY TABLE...");
+      this.employees = [];
     },
 
     // gọi api load dữ liệu
@@ -506,9 +555,8 @@ export default {
         axios
           .get(employeeAPI.getEmployees)
           .then(function (res) {
-            console.log(res.data.Data);
             me.employees = res.data.Data;
-            console.log("this is me: ", me.employees[0].EmployeeCode);
+            console.log("this is data: ", me.employees);
           })
           .catch(function (res) {
             console.log(res);
@@ -517,6 +565,37 @@ export default {
         console.log("lỗi khi created: ", error);
       }
     },
+
+    // lấy thông tin cụ thể của 1 employee
+    getEmployeeInfo(employeeId) {
+      try {
+        var me = this;
+        const getInforURL = `${SERVER_API_URL}/${employeeId}`;
+        // gọi api
+        axios
+          .get(getInforURL)
+          .then(function (res) {
+            console.log("lấy thông tin nhân viên ", res.data);
+            return res.data;
+          })
+          .then(function (employee) {
+            // chuẩn hóa ngày
+            employee.DateOfBirth = me.formatDate(employee.DateOfBirth, "en-CA");
+            employee.IdentityDate = me.formatDate(employee.IdentityDate, "en-CA");
+
+            // hiển thị trên form
+            me.formData = employee;
+            
+            console.log("đưa thông tin nhân viên lên form: ");
+          })
+          .catch(function (res) {
+            console.log("thế này là hỏng ", res);
+          });
+      } catch (error) {
+        console.log("lỗi khi lấy thông tin nhân viên: ", error);
+      }
+    },
+
     // lấy mã nhân viên mới
     getNewCode() {
       try {
@@ -542,9 +621,13 @@ export default {
 
     // reset form
     resetForm() {
-      
-    }, 
+      console.log("reset lại form...");
+      Object.keys(this.formData).forEach((key) => {
+        this.formData[key] = null;
+      });
 
+      console.log("đã reset xong: ", this.formData);
+    },
 
     // validate---------------------------------------------
     // validate date
@@ -652,17 +735,30 @@ export default {
       };
     },
 
-    //  ấn nút thêm mới nhân viên
-    btnShowForm(employeeId=null) {
-      console.log("mã mới: ", this.getNewCode());
+    //  hiển thị form sửa hoặc xóa
+    btnShowForm(employeeId = null) {
+      if (!employeeId) {
+        console.log("Chế độ thêm mới: ");
+        console.log("mã mới: ", this.getNewCode());
+      } else {
+        console.log("mã mới: ", this.getEmployeeInfo(employeeId));
+      }
       this.isShowForm = true;
     },
 
+    // đóng form thông tin
     btnOnCloseForm() {
       this.isShowForm = false;
+      this.resetForm();
     },
+    // show các dialog, default: thông báo success
+    btnShowDialog(employeeCode = null, type = DIALOG.SUCCESS) {},
 
-    // khi ấn nút cất
+    /**
+     * CÁC CHỨC NĂNG THÊM, SỬA, XÓA------------------------------------------------------------
+     */
+
+    // CẤT: thêm hoặc sửa: mặc định là thêm
     btnSaveOnClick(employeeId = null) {
       // lấy dữ liệu từ form
       const employee = this.formData;
@@ -673,11 +769,11 @@ export default {
       } else {
         let requestURL = `${SERVER_API_URL}`;
 
+        // nếu đang ở trạng thái sửa
         if (employeeId) {
           requestURL = `${SERVER_API_URL}/${employeeId}`;
           this.apiMethod = "put";
           //dialog xác nhận lại xem user có muốn lưu sửa đổi không
-
         } else {
           console.log("thêm hay sửa: ", this.apiMethod);
         }
@@ -696,6 +792,34 @@ export default {
             // return res;
           })
           .catch((error) => console.log("Lỗi khi lưu, sửa bản ghi: ", error));
+      }
+    },
+
+    // CẤT VÀ THÊM MỚI: sửa và thêm nhiều employee một cách liên tục
+    btnSaveAndNew(employeeId = null) {},
+
+    // XÓA
+    btnDeleteOnClick(employeeId = null) {
+      if (employeeId) {
+        try {
+          var me = this;
+          const deleteURL = `${SERVER_API_URL}/${employeeId}`;
+          // gọi api
+          axios
+            .delete(deleteURL)
+            .then(function (res) {
+              console.log("xóa thành công: ",res);
+              console.log(res.data);
+            })
+            .catch(function (error) {
+              console.log("không xóa được. server trả về: ", error);
+            });
+
+        } catch (error) {
+          console.log("lỗi khi xóa: ", error);
+        }
+      } else {
+        console.log("Phải biết id thì ms xóa đc chứ!!");
       }
     },
   },
@@ -734,4 +858,4 @@ export default {
 </script>
 <style lang="css">
 @import url("@/css/layout/content.css");
-</style> 
+</style>
