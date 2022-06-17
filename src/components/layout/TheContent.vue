@@ -21,6 +21,7 @@
           class="primary-input icon-input"
           type="text"
           placeholder="Tìm kiếm theo mã, tên nhân viên"
+          v-model="searchPattern"
         />
         <button id="reload-data" class="none-btn">
           <font-awesome-icon icon="fa-solid fa-arrow-rotate-right" />
@@ -67,27 +68,7 @@
                 >
                   Sửa
                 </button>
-                <span class="action-combobox">
-                  <button class="select-selected border-icon-combobox"
-                    @click="showCombobox"
-                  >
-                    <font-awesome-icon
-                      icon="fa-solid fa-caret-down"
-                    ></font-awesome-icon>
-                  </button>
-                  <ul class="select-items"
-                    v-show="isShowCombobox"
-                  >
-                    <li>Nhân bản</li>
-                    <li
-                      class="delete-em-btn"
-                      @click="btnDeleteOnClick(emp.EmployeeId)"
-                    >
-                      Xóa
-                    </li>
-                    <li>Ngừng sử dụng</li>
-                  </ul>
-                </span>
+                <DCombobox :emp="emp" />
               </td>
             </tr>
           </tbody>
@@ -458,7 +439,11 @@
   </div>
 </template>
 <script>
+// import các thư viện
 import axios from "axios";
+
+// import các components
+import DCombobox from "@/components/base/Combobox.vue";
 
 const SERVER_API_URL = "https://amis.manhnv.net/api/v1/Employees";
 
@@ -487,13 +472,16 @@ const DIALOG = {
 
 export default {
   name: "TheContent",
+  components: {
+    DCombobox,
+  },
   data() {
     return {
       employees: [],
+      searchPattern: "",
 
       isShowForm: false,
       isShowDialog: false,
-      isShowCombobox: false,
 
       apiMethod: "post",
       formData: {
@@ -521,6 +509,30 @@ export default {
       },
     };
   },
+  watch: {
+    // TÌM KIẾM
+    searchPattern(newSearchPattern) {
+      try {
+        console.log("Searching...", newSearchPattern);
+        let searchURL = `${SERVER_API_URL}/filter?employeeFilter=${this.searchPattern}`;
+
+        var me = this;
+        // gọi api search
+        axios
+          .get(searchURL)
+          .then(function (res) {
+            me.employees = res.data.Data;
+            console.log("search result: ", me.employees);
+          })
+          .catch(function (res) {
+            console.log(res);
+          });
+      } catch (error) {
+        console.log("lỗi khi search: ", error);
+      }
+    },
+  },
+
   methods: {
     /**
      * chuẩn hóa ngày theo format
@@ -533,11 +545,6 @@ export default {
         return formatDate;
       }
       return "";
-    },
-
-    // hiển thị tùy chọn combobox
-    showCombobox() {
-      this.isShowCombobox = true;
     },
 
     // empty table
@@ -581,11 +588,14 @@ export default {
           .then(function (employee) {
             // chuẩn hóa ngày
             employee.DateOfBirth = me.formatDate(employee.DateOfBirth, "en-CA");
-            employee.IdentityDate = me.formatDate(employee.IdentityDate, "en-CA");
+            employee.IdentityDate = me.formatDate(
+              employee.IdentityDate,
+              "en-CA"
+            );
 
             // hiển thị trên form
             me.formData = employee;
-            
+
             console.log("đưa thông tin nhân viên lên form: ");
           })
           .catch(function (res) {
@@ -808,13 +818,12 @@ export default {
           axios
             .delete(deleteURL)
             .then(function (res) {
-              console.log("xóa thành công: ",res);
+              console.log("xóa thành công: ", res);
               console.log(res.data);
             })
             .catch(function (error) {
               console.log("không xóa được. server trả về: ", error);
             });
-
         } catch (error) {
           console.log("lỗi khi xóa: ", error);
         }

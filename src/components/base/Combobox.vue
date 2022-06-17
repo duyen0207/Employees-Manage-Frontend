@@ -13,6 +13,11 @@
   </span>
 </template>
 <script>
+
+import axios from "axios";
+
+const SERVER_API_URL = "https://amis.manhnv.net/api/v1/Employees";
+
 export default {
   name: "DCombobox",
   data() {
@@ -22,15 +27,15 @@ export default {
   },
   props: {
     emp: {
-        EmployeeId: ""
+      EmployeeId: "",
     },
-    SERVER_API_URL: "https://amis.manhnv.net/api/v1/Employees"
   },
 
   methods: {
     // hiển thị tùy chọn combobox
     showCombobox() {
-      this.isShowCombobox = true;
+      if (this.isShowCombobox == false) this.isShowCombobox = true;
+      else this.isShowCombobox = false;
     },
     // XÓA
     btnDeleteOnClick(employeeId = null) {
