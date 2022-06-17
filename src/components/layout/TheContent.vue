@@ -3,7 +3,7 @@
           <!-- Content header ----------------------------------------------->
           <div class="content-header rows-flexbox">
             <h2 class="content-title">Nhân viên</h2>
-            <button @click="btnAddOnClick" id="add-new-emp-btn" class="primary-btn">
+            <button @click="btnShowForm" id="add-new-emp-btn" class="primary-btn">
               Thêm mới nhân viên
             </button>
           </div>
@@ -47,7 +47,7 @@
                 </thead>
                 <tbody>
                   <tr v-for="emp in employees" :key="emp.EmployeeId">
-                    <td id="{{emp.EmployeeCode}}" class="checkbox-column">
+                    <td :id="emp.EmployeeId" class="checkbox-column">
                       <input type="checkbox" name="" id="" class="check-item" />
                     </td>
                     <td class="employee-code-column">{{emp.EmployeeCode}}</td>
@@ -62,6 +62,7 @@
                         data-employee-id="{{emp.EmployeeId}}"
                         class="none-btn edit-employee-btn"
                         style="color: rgb(56, 148, 234)"
+                        @click="btnSaveOnClick(emp.EmployeeId)"
                     >
                         Sửa
                     </button>
@@ -118,6 +119,7 @@
                     type="button"
                     id="close-btn"
                     class="icon"
+                    @click="btnOnCloseForm"
                   >
                     <font-awesome-icon icon="fa-solid fa-xmark" />
                     <!-- <font-awesome-icon icon="fa-solid fa-xmark" /> -->
@@ -145,6 +147,7 @@
                           id="employee-code"
                           class="primary-input"
                           placeholder="NV-0001"
+                          autofocus
                           v-model="formData.EmployeeCode"
                           required
                         />
@@ -399,19 +402,21 @@
                   type="button"
                   id="cancel-btn"
                   class="primary-btn second-btn"
+                  @click="btnOnCloseForm"
                 >
                   Hủy
                 </button>
 
                 <div class="horizontal-group-btn">
                   <button
-                    id="save-edit-btn"
+                    id="add-edit-btn"
                     type="button"
                     class="primary-btn second-btn"
+                    @click="btnSaveOnClick(null)"
                   >
                     Cất
                   </button>
-                  <button id="save-new-btn" type="button" class="primary-btn">
+                  <button id="add-multi-btn" type="button" class="primary-btn">
                     Cất và thêm
                   </button>
                 </div>
@@ -447,6 +452,7 @@ export default {
   data() {
     return {
       isShowForm: false,
+      apiMethod: "post",
       employees: [],
       formData: {
         EmployeeCode: "Hello",
@@ -455,11 +461,11 @@ export default {
         DepartmentName: "tên đơn vị",
         Position: "vị trí",
 
-        DateOfBirth: "ngày sinh",
+        DateOfBirth: null,
         Gender: "1",
         GenderName: "Nam",
         IdentityNumber: "823923",
-        IdentityDate: "",
+        IdentityDate: null,
         IdentityPlace: "Hà Nội",
         Address: "Hà Nội",
 
@@ -494,7 +500,7 @@ export default {
     // gọi api load dữ liệu
     loadData() {
       try {
-        console.log("1. created");
+        console.log("load data");
         var me = this;
         // gọi api để load dữ liệu lên bảng
         axios
@@ -519,11 +525,12 @@ export default {
         axios
           .get(employeeAPI.getNewCode)
           .then(function (res) {
-            console.log(res.data);
+            console.log("gọi xong api rồi ", res.data);
             return res.data;
           })
           .then(function (code) {
             me.formData.EmployeeCode = code;
+            console.log("lấy mã mới nào: ", code);
           })
           .catch(function (res) {
             console.log(res);
@@ -533,81 +540,11 @@ export default {
       }
     },
 
-    // thêm mới employee
-    addNewEmployee() {},
-    // lấy các giá trị input đầu vào từ form
-    getFormData() {
-      // Get value from form add employee
-      const employeeCode = $("#employee-code").val();
-      const employeeName = $("#employee-name").val();
-      const departmentId = $("#department-id option:selected").val();
-      const departmentName = $("#department-id option:selected").text();
-      const employeePosition = $("#employee-position").val();
+    // reset form
+    resetForm() {
+      
+    }, 
 
-      let birthday = $("#birthday").val();
-      // let sex = $("#sex-select-group input[name='gender']:checked").val();
-      console.log(
-        "kiểm tra có check vào nữ không: ",
-        document.getElementById("female").checked
-      );
-      let sex, sex_name;
-      if (document.getElementById("female").checked) {
-        sex = 2;
-        sex_name = "Nữ";
-      } else if (document.getElementById("male").checked) {
-        sex = 1;
-        sex_name = "Nam";
-      } else if (document.getElementById("other-gender").checked) {
-        sex = 3;
-        sex_name = "Khác";
-      }
-
-      const identityNumber = $("#identity-number").val();
-      let identityDate = $("#identity-date").val();
-      const identityPlace = $("#identity-place").val();
-      const address = $("#address").val();
-
-      const mobilephone = $("#mobile-phone").val();
-      const telephone = $("#telephone").val();
-      const email = $("#email").val();
-
-      const bankAccount = $("#bank-account").val();
-      const bankName = $("#bank-name").val();
-      const bankBranch = $("#bank-branch").val();
-
-      // create data
-      let data = {
-        EmployeeCode: employeeCode,
-        EmployeeName: employeeName,
-        DepartmentId: departmentId,
-        DepartmentName: departmentName,
-        EmployeePosition: employeePosition,
-
-        DateOfBirth: birthday,
-        Gender: sex,
-        GenderName: sex_name,
-        Address: address,
-        IdentityNumber: identityNumber,
-        IdentityDate: identityDate,
-        IdentityPlace: identityPlace,
-        Address: address,
-
-        PhoneNumber: mobilephone,
-        TelephoneNumber: telephone,
-        Email: email,
-
-        BankAccountNumber: bankAccount,
-        BankName: bankName,
-        BankBranchName: bankBranch,
-      };
-
-      return data;
-    },
-
-    btnAddOnClick() {
-      console.log("mã mới: ", this.getNewCode());
-      this.isShowForm = true;
-    },
 
     // validate---------------------------------------------
     // validate date
@@ -684,14 +621,14 @@ export default {
 
       // check date field-------------------------------------------------
       console.log("check ngày tháng hợp lệ...");
-      let dobValid = validateDate(data.DateOfBirth);
+      let dobValid = this.validateDate(data.DateOfBirth);
       if (!dobValid.check) {
         check = false;
         errorInfo += "- Ngày sinh: " + dobValid.errorMsg;
       }
       console.log("check xong ngày sinh: ", errorInfo);
 
-      let idDateValid = validateDate(data.IdentityDate);
+      let idDateValid = this.validateDate(data.IdentityDate);
       if (!idDateValid.check) {
         check = false;
         errorInfo += "- Ngày cấp CMND: " + idDateValid.errorMsg;
@@ -702,7 +639,7 @@ export default {
       console.log("check email hợp lệ...");
       if (data.Email) {
         console.log("email validate: ", data.Email);
-        if (!validateEmail(data.Email)) {
+        if (!this.validateEmail(data.Email)) {
           check = false;
           errorInfo += "- Email không đúng định dạng.\n";
         }
@@ -714,6 +651,53 @@ export default {
         errorInfo: errorInfo,
       };
     },
+
+    //  ấn nút thêm mới nhân viên
+    btnShowForm(employeeId=null) {
+      console.log("mã mới: ", this.getNewCode());
+      this.isShowForm = true;
+    },
+
+    btnOnCloseForm() {
+      this.isShowForm = false;
+    },
+
+    // khi ấn nút cất
+    btnSaveOnClick(employeeId = null) {
+      // lấy dữ liệu từ form
+      const employee = this.formData;
+      // validate
+      let validate = this.validateOnclick(employee);
+      if (!validate.check) {
+        console.log("Dữ liệu không hợp lệ ", validate.errorInfo);
+      } else {
+        let requestURL = `${SERVER_API_URL}`;
+
+        if (employeeId) {
+          requestURL = `${SERVER_API_URL}/${employeeId}`;
+          this.apiMethod = "put";
+          //dialog xác nhận lại xem user có muốn lưu sửa đổi không
+
+        } else {
+          console.log("thêm hay sửa: ", this.apiMethod);
+        }
+
+        axios({
+          method: this.apiMethod,
+          url: requestURL,
+          data: employee,
+          headers: {
+            "Content-Type": "application/json; charset=UTF-8",
+          },
+        })
+          .then(function (res) {
+            console.log("thành công: ", res);
+            // hiển thị thông báo thành công
+            // return res;
+          })
+          .catch((error) => console.log("Lỗi khi lưu, sửa bản ghi: ", error));
+      }
+    },
   },
   // props: {
   //   employees: Array,
@@ -722,13 +706,10 @@ export default {
   //before create, created
   created() {
     // this.employees = [];
-    console.log("1.created");
+    console.log("1. content created");
 
     this.loadData();
     this.isShowForm = false;
-    // this.formData = null;
-    // console("form data change: ", this.formData);
-
   },
   //before mount
   beforeMount() {
@@ -743,15 +724,11 @@ export default {
   //   before update
   beforeUpdate() {
     console.log("4. on before update");
-    // console("form data change: ", this.formData);
-    console.log("formmmmmmmmmmmmmm: ",this.formData);
-
   },
 
   // updated
   updated() {
     console.log("5. on updated");
-    
   },
 };
 </script>

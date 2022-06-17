@@ -4,13 +4,9 @@
         <TheNavbar/>
         <div class="main">
             <TheHeader/>
-            <TheContent :employees="employees"/>
+            <TheContent/>
         </div>
       </div>
-
-
-      
-
 
     </div>
 </template>
@@ -42,6 +38,7 @@ export default {
   //before create, created
   created() {
     // this.loadData();
+    console.log("page created.");
   },
   //before mount
   beforeMount() {
