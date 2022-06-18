@@ -96,8 +96,8 @@ hr.divider {
 }
 
 .notif-msg {
-  padding: 30px 20px 40px;
-  justify-content: center;
+  padding: 20px 20px 15px;
+  justify-content: flex-start;
 }
 
 .modal .notif-window {

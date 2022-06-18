@@ -4,16 +4,17 @@
       <font-awesome-icon icon="fa-solid fa-caret-down"></font-awesome-icon>
     </button>
     <ul class="select-items" v-show="isShowCombobox">
-      <li>Nhân bản</li>
-      <li class="delete-em-btn" @click="btnDeleteOnClick(emp.EmployeeId)">
-        Xóa
+      <li
+        v-for="(option, index) in selectOptions"
+        :key="index"
+        @click="$emit(option.clickEvent)"
+      >
+        {{ option.label }}
       </li>
-      <li>Ngừng sử dụng</li>
     </ul>
   </span>
 </template>
 <script>
-
 import axios from "axios";
 
 const SERVER_API_URL = "https://amis.manhnv.net/api/v1/Employees";
@@ -29,6 +30,11 @@ export default {
     emp: {
       EmployeeId: "",
     },
+    isShowForm: false,
+    employees: [],
+    // truyền từ prop danh sách các lựa chọn, mỗi lựa chọn
+    // ở dạng object với các key là {label, clickEvent}
+    selectOptions: Array,
   },
 
   methods: {
@@ -37,28 +43,8 @@ export default {
       if (this.isShowCombobox == false) this.isShowCombobox = true;
       else this.isShowCombobox = false;
     },
-    // XÓA
-    btnDeleteOnClick(employeeId = null) {
-      if (employeeId) {
-        try {
-          const deleteURL = `${SERVER_API_URL}/${employeeId}`;
-          // gọi api
-          axios
-            .delete(deleteURL)
-            .then(function (res) {
-              console.log("xóa thành công: ", res);
-              console.log(res.data);
-            })
-            .catch(function (error) {
-              console.log("không xóa được. server trả về: ", error);
-            });
-        } catch (error) {
-          console.log("lỗi khi xóa: ", error);
-        }
-      } else {
-        console.log("Phải biết id thì ms xóa đc chứ!!");
-      }
-    },
+
+    
   },
 };
 </script>

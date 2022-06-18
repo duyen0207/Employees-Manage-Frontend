@@ -1,5 +1,14 @@
 <template lang="">
   <div class="content">
+    <!-- Dialog notification -->
+    <DDialog
+      ref="notifDialog"
+      :messages="dialogMsg"
+      :dialogType="dialogType"
+      @saveAgree="btnSaveOnClick"
+      @saveDelete="btnDeleteOnClick"
+    />
+
     <!-- Content header ----------------------------------------------->
     <div class="content-header rows-flexbox">
       <h2 class="content-title">Nhân viên</h2>
@@ -23,7 +32,7 @@
           placeholder="Tìm kiếm theo mã, tên nhân viên"
           v-model="searchPattern"
         />
-        <button id="reload-data" class="none-btn">
+        <button id="reload-data" class="none-btn" @click="loadData">
           <font-awesome-icon icon="fa-solid fa-arrow-rotate-right" />
         </button>
       </div>
@@ -68,7 +77,12 @@
                 >
                   Sửa
                 </button>
-                <DCombobox :emp="emp" />
+                <DCombobox
+                  :emp="emp"
+                  :selectOptions="selectOptions"
+                  @duplicateEmp="btnNewDuplicateOnClick(emp.EmployeeId)"
+                  @deleteEmp="btnShowDialog('3', emp.EmployeeCode)"
+                />
               </td>
             </tr>
           </tbody>
@@ -423,7 +437,7 @@
                   id="add-edit-btn"
                   type="button"
                   class="primary-btn second-btn"
-                  @click="btnSaveOnClick(null)"
+                  @click="btnShowDialog('2', employeeCode = null)"
                 >
                   Cất
                 </button>
@@ -444,6 +458,7 @@ import axios from "axios";
 
 // import các components
 import DCombobox from "@/components/base/Combobox.vue";
+import DDialog from "@/components/base/Dialog.vue";
 
 const SERVER_API_URL = "https://amis.manhnv.net/api/v1/Employees";
 
@@ -461,19 +476,11 @@ const Action = {
   GET_INFO: 4,
 };
 
-const DIALOG = {
-  // validate
-  ERROR: 0,
-  // add success, edit success, delete success
-  SUCCESS: 1,
-  // confirm delete, confirm edit
-  CONFIRM: 2,
-};
-
 export default {
   name: "TheContent",
   components: {
     DCombobox,
+    DDialog,
   },
   data() {
     return {
@@ -481,7 +488,24 @@ export default {
       searchPattern: "",
 
       isShowForm: false,
-      isShowDialog: false,
+      dialogMsg: ["Thêm mới thành công"],
+      dialogType: "2",
+
+      // custom action combobox
+      selectOptions: [
+        {
+          label: "Nhân bản",
+          clickEvent: "duplicateEmp",
+        },
+        {
+          label: "Xóa",
+          clickEvent: "deleteEmp",
+        },
+        {
+          label: "Ngừng sử dụng",
+          clickEvent: "stopUsing",
+        },
+      ],
 
       apiMethod: "post",
       formData: {
@@ -689,26 +713,26 @@ export default {
 
     // validate when click save
     validateOnclick(data) {
-      let errorInfo = "";
+      let errorInfo = [];
       let check = true;
 
       // check compulsory field-----------------------------------------
       console.log("check các trường bắt buộc...");
       if (!data.EmployeeCode) {
         check = false;
-        errorInfo += "- Mã nhân viên không được để trống.\n";
+        errorInfo.push("- Mã nhân viên không được để trống.\n");
       }
       console.log("check xong mã: ", errorInfo);
 
       if (!data.EmployeeName) {
         check = false;
-        errorInfo += "- Tên nhân viên không được để trống.\n";
+        errorInfo.push("- Tên nhân viên không được để trống.\n");
       }
       console.log("check xong tên: ", errorInfo);
 
       if (!data.DepartmentId) {
         check = false;
-        errorInfo += "- Đơn vị không được để trống.\n";
+        errorInfo.push("- Đơn vị không được để trống.\n");
       }
       console.log("check xong đơn vị: ", errorInfo);
 
@@ -717,14 +741,14 @@ export default {
       let dobValid = this.validateDate(data.DateOfBirth);
       if (!dobValid.check) {
         check = false;
-        errorInfo += "- Ngày sinh: " + dobValid.errorMsg;
+        errorInfo.push("- Ngày sinh: " + dobValid.errorMsg);
       }
       console.log("check xong ngày sinh: ", errorInfo);
 
       let idDateValid = this.validateDate(data.IdentityDate);
       if (!idDateValid.check) {
         check = false;
-        errorInfo += "- Ngày cấp CMND: " + idDateValid.errorMsg;
+        errorInfo.push("- Ngày cấp CMND: " + idDateValid.errorMsg);
       }
       console.log("check xong ngày cấp: ", errorInfo);
 
@@ -734,7 +758,7 @@ export default {
         console.log("email validate: ", data.Email);
         if (!this.validateEmail(data.Email)) {
           check = false;
-          errorInfo += "- Email không đúng định dạng.\n";
+          errorInfo.push("- Email không đúng định dạng.\n");
         }
       }
       console.log("check xong email: ", errorInfo);
@@ -761,12 +785,30 @@ export default {
       this.isShowForm = false;
       this.resetForm();
     },
+
     // show các dialog, default: thông báo success
-    btnShowDialog(employeeCode = null, type = DIALOG.SUCCESS) {},
+    btnShowDialog(type = "0", employeeCode = null) {
+      // chọn loại dialog
+      this.dialogType = type;
+      // thêm lời nhắn
+      // confirm if delete
+      if (type == "3") {
+        this.dialogMsg = [`Bạn có chắc chắc muốn xóa nhân viên có mã <${employeeCode}> không?`];
+      } 
+      // confirm if save
+      else if (type=="2") {
+        this.dialogMsg = ["Dữ liệu đã bị thay đổi, bạn có muốn cất không?"];
+      }
+
+      // hiển thị dialog
+      this.$refs.notifDialog.showDialog();
+    },
 
     /**
      * CÁC CHỨC NĂNG THÊM, SỬA, XÓA------------------------------------------------------------
      */
+
+    addAndEdit(employeeId = null) {},
 
     // CẤT: thêm hoặc sửa: mặc định là thêm
     btnSaveOnClick(employeeId = null) {
@@ -800,13 +842,22 @@ export default {
             console.log("thành công: ", res);
             // hiển thị thông báo thành công
             // return res;
+            if (apiMethod == "post") {
+            }
           })
           .catch((error) => console.log("Lỗi khi lưu, sửa bản ghi: ", error));
       }
     },
 
     // CẤT VÀ THÊM MỚI: sửa và thêm nhiều employee một cách liên tục
-    btnSaveAndNew(employeeId = null) {},
+    btnSaveAndNew(employeeId = null) {
+      // lưu sửa và thêm
+
+      // reset lại form
+      this.resetForm();
+      // lấy mã nhân viên mới
+      this.getNewCode();
+    },
 
     // XÓA
     btnDeleteOnClick(employeeId = null) {
@@ -831,10 +882,15 @@ export default {
         console.log("Phải biết id thì ms xóa đc chứ!!");
       }
     },
+
+    // NHÂN BẢN
+    btnNewDuplicateOnClick(employeeId) {
+      // get thông tin của employee để đẩy lên form
+      this.btnShowForm(employeeId);
+      // lấy mã nhân viên mới và đẩy lên form
+      this.getNewCode();
+    },
   },
-  // props: {
-  //   employees: Array,
-  // },
 
   //before create, created
   created() {
@@ -852,6 +908,8 @@ export default {
   //mounted
   mounted() {
     console.log("3. on mounted");
+    console.log("đây là dialog mình tạo ra: ", this.$refs.notifDialog);
+    // this.$refs.notifDialog.showDialog();
   },
 
   //   before update
