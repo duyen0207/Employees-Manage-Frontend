@@ -5,8 +5,8 @@
       ref="notifDialog"
       :messages="dialogMsg"
       :dialogType="dialogType"
-      @saveAgree="btnSaveOnClick"
-      @saveDelete="btnDeleteOnClick"
+      @saveAgree="addOrEdit()"
+      @deleteAgree="btnDeleteOnClick()"
     />
 
     <!-- Content header ----------------------------------------------->
@@ -81,7 +81,9 @@
                   :emp="emp"
                   :selectOptions="selectOptions"
                   @duplicateEmp="btnNewDuplicateOnClick(emp.EmployeeId)"
-                  @deleteEmp="btnShowDialog('3', emp.EmployeeCode)"
+                  @deleteEmp="
+                    btnShowDialog('3', emp.EmployeeCode, emp.EmployeeId)
+                  "
                 />
               </td>
             </tr>
@@ -437,7 +439,7 @@
                   id="add-edit-btn"
                   type="button"
                   class="primary-btn second-btn"
-                  @click="btnShowDialog('2', employeeCode = null)"
+                  @click="btnSaveOnClick()"
                 >
                   Cất
                 </button>
@@ -486,6 +488,7 @@ export default {
     return {
       employees: [],
       searchPattern: "",
+      chosenEmployeeId: null,
 
       isShowForm: false,
       dialogMsg: ["Thêm mới thành công"],
@@ -597,6 +600,19 @@ export default {
       }
     },
 
+    // lựa chọn emp id để thực hiện các hành động như sửa, xóa
+    setChoosenEmpId(employeeId) {
+      if (employeeId) {
+        this.chosenEmployeeId = employeeId;
+      }
+      console.log("set employee id: ", this.chosenEmployeeId);
+    },
+    // reset lại employee id muốn sửa, xóa
+    resetChosenEmployeeId() {
+      console.log("nhân viên được chọn là: ", this.chosenEmployeeId);
+      this.chosenEmployeeId = null;
+      console.log("reset thành công.");
+    },
     // lấy thông tin cụ thể của 1 employee
     getEmployeeInfo(employeeId) {
       try {
@@ -675,8 +691,6 @@ export default {
         let day = dateFormat.getDate();
         let month = dateFormat.getMonth() + 1;
 
-        console.log("đây là mảng ngày ", year, month, day, dateFormat);
-
         // kiểm tra ngày có tồn tại không
         if (day > 31 || month > 12 || day < 1 || month < 1) return false;
         else {
@@ -706,7 +720,6 @@ export default {
     // validate email
     validateEmail(email) {
       var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      console.log("Validate email: ", re.test(email));
 
       return re.test(email);
     },
@@ -717,51 +730,41 @@ export default {
       let check = true;
 
       // check compulsory field-----------------------------------------
-      console.log("check các trường bắt buộc...");
       if (!data.EmployeeCode) {
         check = false;
         errorInfo.push("- Mã nhân viên không được để trống.\n");
       }
-      console.log("check xong mã: ", errorInfo);
 
       if (!data.EmployeeName) {
         check = false;
         errorInfo.push("- Tên nhân viên không được để trống.\n");
       }
-      console.log("check xong tên: ", errorInfo);
 
       if (!data.DepartmentId) {
         check = false;
         errorInfo.push("- Đơn vị không được để trống.\n");
       }
-      console.log("check xong đơn vị: ", errorInfo);
 
       // check date field-------------------------------------------------
-      console.log("check ngày tháng hợp lệ...");
       let dobValid = this.validateDate(data.DateOfBirth);
       if (!dobValid.check) {
         check = false;
         errorInfo.push("- Ngày sinh: " + dobValid.errorMsg);
       }
-      console.log("check xong ngày sinh: ", errorInfo);
 
       let idDateValid = this.validateDate(data.IdentityDate);
       if (!idDateValid.check) {
         check = false;
         errorInfo.push("- Ngày cấp CMND: " + idDateValid.errorMsg);
       }
-      console.log("check xong ngày cấp: ", errorInfo);
 
       // check email-----------------------------------------------------
-      console.log("check email hợp lệ...");
       if (data.Email) {
-        console.log("email validate: ", data.Email);
         if (!this.validateEmail(data.Email)) {
           check = false;
           errorInfo.push("- Email không đúng định dạng.\n");
         }
       }
-      console.log("check xong email: ", errorInfo);
 
       return {
         check: check,
@@ -769,13 +772,15 @@ export default {
       };
     },
 
-    //  hiển thị form sửa hoặc xóa
+    //  hiển thị form sửa hoặc thêm mới
     btnShowForm(employeeId = null) {
       if (!employeeId) {
         console.log("Chế độ thêm mới: ");
         console.log("mã mới: ", this.getNewCode());
       } else {
         console.log("mã mới: ", this.getEmployeeInfo(employeeId));
+        // chọn employee
+        this.setChoosenEmpId(employeeId);
       }
       this.isShowForm = true;
     },
@@ -784,19 +789,29 @@ export default {
     btnOnCloseForm() {
       this.isShowForm = false;
       this.resetForm();
+      this.resetChosenEmployeeId();
     },
 
-    // show các dialog, default: thông báo success
-    btnShowDialog(type = "0", employeeCode = null) {
+    /**
+     * show các dialog, default: thông báo success
+     * type = 0: error dialog
+     * type = 1: success dialog
+     * type = 2: confirm save dialog
+     * type = 3: confirm delete dialog
+     */
+    btnShowDialog(type = "0", employeeCode = null, employeeId = null) {
       // chọn loại dialog
       this.dialogType = type;
       // thêm lời nhắn
       // confirm if delete
       if (type == "3") {
-        this.dialogMsg = [`Bạn có chắc chắc muốn xóa nhân viên có mã <${employeeCode}> không?`];
-      } 
+        this.dialogMsg = [
+          `Bạn có chắc chắc muốn xóa nhân viên có mã <${employeeCode}> không?`,
+        ];
+        this.setChoosenEmpId(employeeId);
+      }
       // confirm if save
-      else if (type=="2") {
+      else if (type == "2") {
         this.dialogMsg = ["Dữ liệu đã bị thay đổi, bạn có muốn cất không?"];
       }
 
@@ -808,44 +823,65 @@ export default {
      * CÁC CHỨC NĂNG THÊM, SỬA, XÓA------------------------------------------------------------
      */
 
-    addAndEdit(employeeId = null) {},
+    addOrEdit() {
+      const employee = this.formData;
+
+      var me = this;
+      let requestURL = `${SERVER_API_URL}`;
+
+      // nếu đang ở trạng thái sửa
+      if (this.chosenEmployeeId) {
+        requestURL = `${SERVER_API_URL}/${this.chosenEmployeeId}`;
+        this.apiMethod = "put";
+      } else {
+        console.log("thêm hay sửa: ", this.apiMethod);
+      }
+
+      axios({
+        method: this.apiMethod,
+        url: requestURL,
+        data: employee,
+        headers: {
+          "Content-Type": "application/json; charset=UTF-8",
+        },
+      })
+        .then(function (res) {
+          console.log("thành công: ", res);
+
+          // hiển thị thông báo thành công
+          if (me.apiMethod == "post") {
+            me.dialogMsg = ["Thêm mới nhân viên thành công."];
+          } else {
+            me.dialogMsg = ["Sửa nhân viên thành công."];
+          }
+          me.btnShowDialog("1");
+          // reset choosen emp id
+          me.resetChosenEmployeeId();
+        })
+        .catch(function (error) {
+          console.log(
+            "Lỗi khi lưu, sửa bản ghi: ",
+            error,
+            error.response.data.userMsg
+          );
+          // hiển thị thông báo lỗi
+          me.dialogMsg = [error.response.data.userMsg];
+          me.btnShowDialog("0");
+        });
+    },
 
     // CẤT: thêm hoặc sửa: mặc định là thêm
-    btnSaveOnClick(employeeId = null) {
+    btnSaveOnClick() {
       // lấy dữ liệu từ form
       const employee = this.formData;
       // validate
       let validate = this.validateOnclick(employee);
       if (!validate.check) {
         console.log("Dữ liệu không hợp lệ ", validate.errorInfo);
+        this.dialogMsg = validate.errorInfo;
+        this.btnShowDialog("0", null);
       } else {
-        let requestURL = `${SERVER_API_URL}`;
-
-        // nếu đang ở trạng thái sửa
-        if (employeeId) {
-          requestURL = `${SERVER_API_URL}/${employeeId}`;
-          this.apiMethod = "put";
-          //dialog xác nhận lại xem user có muốn lưu sửa đổi không
-        } else {
-          console.log("thêm hay sửa: ", this.apiMethod);
-        }
-
-        axios({
-          method: this.apiMethod,
-          url: requestURL,
-          data: employee,
-          headers: {
-            "Content-Type": "application/json; charset=UTF-8",
-          },
-        })
-          .then(function (res) {
-            console.log("thành công: ", res);
-            // hiển thị thông báo thành công
-            // return res;
-            if (apiMethod == "post") {
-            }
-          })
-          .catch((error) => console.log("Lỗi khi lưu, sửa bản ghi: ", error));
+        this.btnShowDialog("2");
       }
     },
 
@@ -860,17 +896,22 @@ export default {
     },
 
     // XÓA
-    btnDeleteOnClick(employeeId = null) {
-      if (employeeId) {
+    btnDeleteOnClick() {
+      if (this.chosenEmployeeId) {
         try {
           var me = this;
-          const deleteURL = `${SERVER_API_URL}/${employeeId}`;
+          const deleteURL = `${SERVER_API_URL}/${this.chosenEmployeeId}`;
           // gọi api
           axios
             .delete(deleteURL)
             .then(function (res) {
               console.log("xóa thành công: ", res);
               console.log(res.data);
+
+              // reset emp id
+              me.resetChosenEmployeeId();
+              me.dialogMsg = ["Xóa thành công."];
+              me.btnShowDialog("1");
             })
             .catch(function (error) {
               console.log("không xóa được. server trả về: ", error);
@@ -894,16 +935,13 @@ export default {
 
   //before create, created
   created() {
-    // this.employees = [];
     console.log("1. content created");
 
     this.loadData();
     this.isShowForm = false;
   },
   //before mount
-  beforeMount() {
-    console.log("2. on before mount");
-  },
+  beforeMount() {},
 
   //mounted
   mounted() {
@@ -913,13 +951,12 @@ export default {
   },
 
   //   before update
-  beforeUpdate() {
-    console.log("4. on before update");
-  },
+  beforeUpdate() {},
 
   // updated
   updated() {
     console.log("5. on updated");
+    console.log("updated: người được chọn: ", this.chosenEmployeeId);
   },
 };
 </script>
