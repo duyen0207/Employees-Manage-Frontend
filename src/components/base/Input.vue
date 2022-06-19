@@ -9,7 +9,7 @@
     <input
       :type="inputType"
       :class="inputStyle"
-      placeholder="NV-0001"
+      :placeholder="[placeHolder ? placeHolder : '']"
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
     />
@@ -27,6 +27,7 @@ export default {
     inputStyle: String,
     modelValue: String,
     required: Boolean,
+    placeHolder: String,
 
     notifTooltip: String,
   },

@@ -149,56 +149,24 @@
                       -->
                 <div class="" id="employee-info">
                   <div class="rows-flexbox">
-                    <!-- <div class="normal-box div-employee-code">
-                      <label
-                        for="employee-code"
-                        class="compulsory-label top-label"
-                      >
-                        Mã
-                      </label>
-                      <input
-                        type="text"
-                        id="employee-code"
-                        class="primary-input"
-                        placeholder="NV-0001"
-                        autofocus
-                        v-model="formData.EmployeeCode"
-                        required
-                      />
-                      <div class="tool-tip-container">
-                        <div class="wrong-notif-tooltip">
-                          Mã nhân viên không được để trống
-                        </div>
-                      </div>
-                    </div> -->
                     <DInput
-                      :inputType="myInput[0].inputType"
-                      :inputStyle="myInput[0].inputStyle"
-                      v-model="formData.EmployeeCode"
+                      :inputType="'text'"
+                      :inputStyle="'primary-input'"
+                      :placeHolder="'NV-001'"
                       required
+                      v-model="formData.EmployeeCode"
                       >Mã</DInput
                     >
 
-                    <div class="normal-box div-fullname">
-                      <label
-                        for="employee-name"
-                        class="compulsory-label top-label"
-                        >Tên</label
-                      >
-                      <input
-                        type="text"
-                        id="employee-name"
-                        class="primary-input"
-                        placeholder="Nguyễn Văn A"
-                        v-model="formData.EmployeeName"
-                        required
-                      />
-                      <div class="tool-tip-container">
-                        <div class="wrong-notif-tooltip">
-                          Tên không được để trống.
-                        </div>
-                      </div>
-                    </div>
+                    <DInput
+                      :inputType="'text'"
+                      :inputStyle="'primary-input'"
+                      :placeHolder="'Nguyễn Văn A'"
+                      :notifTooltip="'Tên không được để trống.'"
+                      required
+                      v-model="formData.EmployeeName"
+                      >Tên</DInput
+                    >
                   </div>
 
                   <div class="normal-box">
@@ -232,18 +200,14 @@
                       </div>
                     </div>
                   </div>
-                  <div class="normal-box">
-                    <label for="employee-position" class="top-label"
-                      >Chức danh</label
-                    >
-                    <input
-                      type="text"
-                      id="employee-position"
-                      class="primary-input"
-                      placeholder="Nhân viên"
-                      v-model="formData.EmployeePosition"
-                    />
-                  </div>
+
+                  <DInput
+                    :inputType="'text'"
+                    :inputStyle="'primary-input'"
+                    :placeHolder="'Nhân viên'"
+                    v-model="formData.EmployeePosition"
+                    >Chức danh</DInput
+                  >
                 </div>
 
                 <!-- PERSONAL INFO. 
@@ -251,20 +215,13 @@
                       -->
                 <div class="" id="personal-info">
                   <div class="rows-flexbox">
-                    <div class="normal-box div-birthday">
-                      <label for="birthday" class="top-label">Ngày sinh</label>
-                      <input
-                        type="date"
-                        id="birthday"
-                        class="primary-input"
-                        v-model="formData.DateOfBirth"
-                      />
-                      <div class="tool-tip-container">
-                        <div class="wrong-notif-tooltip">
-                          Ngày sinh không hợp lệ
-                        </div>
-                      </div>
-                    </div>
+                    <DInput
+                      :inputType="'date'"
+                      :inputStyle="'primary-input'"
+                      :notifTooltip="'Ngày sinh không hợp lệ.'"
+                      v-model="formData.DateOfBirth"
+                      >Ngày sinh</DInput
+                    >
 
                     <div class="normal-box div-sex">
                       <label for="" class="top-label">Giới tính</label>
@@ -306,133 +263,87 @@
                   </div>
 
                   <div class="rows-flexbox">
-                    <div class="normal-box div-personal-id">
-                      <label for="identity-number" class="top-label"
-                        >Số CMND</label
-                      >
-                      <input
-                        type="text"
-                        id="identity-number"
-                        class="primary-input"
-                        v-model="formData.IdentityNumber"
-                      />
-                    </div>
-
-                    <div class="normal-box div-id-issued-on">
-                      <label for="identity-date" class="top-label"
-                        >Ngày cấp</label
-                      >
-                      <input
-                        type="date"
-                        id="identity-date"
-                        class="primary-input"
-                        v-model="formData.IdentityDate"
-                      />
-                      <div class="tool-tip-container">
-                        <div class="wrong-notif-tooltip">
-                          Ngày cấp CMND không hợp lệ
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="normal-box">
-                    <label for="identity-place" class="top-label"
-                      >Nơi cấp</label
+                    <DInput
+                      :inputType="'text'"
+                      :inputStyle="'primary-input'"
+                      v-model="formData.IdentityNumber"
+                      >Số CMND</DInput
                     >
-                    <input
-                      type="text"
-                      id="identity-place"
-                      class="primary-input"
-                      v-model="formData.IdentityPlace"
-                    />
+
+                    <DInput
+                      :inputType="'date'"
+                      :inputStyle="'primary-input'"
+                      :notifTooltip="'Ngày cấp không hợp lệ.'"
+                      v-model="formData.IdentityDate"
+                      >Ngày cấp</DInput
+                    >
                   </div>
+
+                  <DInput
+                    :inputType="'text'"
+                    :inputStyle="'primary-input'"
+                    v-model="formData.IdentityPlace"
+                    >Nơi cấp</DInput
+                  >
                 </div>
               </div>
               <!-- ADDRESS -->
-              <div class="normal-box">
-                <label for="address" class="top-label">Địa chỉ</label>
-                <input
-                  type="text"
-                  id="address"
-                  class="primary-input"
-                  v-model="formData.Address"
-                />
-              </div>
+              <DInput
+                :inputType="'text'"
+                :inputStyle="'primary-input'"
+                v-model="formData.Address"
+                >Địa chỉ</DInput
+              >
 
               <!-- CONTACT INFO
                   ex: phone number, email -->
               <div id="contact" class="rows-flexbox">
-                <div class="normal-box">
-                  <label for="mobile-phone" class="top-label">ĐT di động</label>
-                  <input
-                    type="text"
-                    id="mobile-phone"
-                    class="primary-input"
-                    v-model="formData.PhoneNumber"
-                  />
-                </div>
+                <DInput
+                  :inputType="'text'"
+                  :inputStyle="'primary-input'"
+                  v-model="formData.PhoneNumber"
+                  >ĐT di động</DInput
+                >
 
-                <div class="normal-box">
-                  <label for="telephone" class="top-label">ĐT cố định</label>
-                  <input
-                    type="text"
-                    id="telephone"
-                    class="primary-input"
-                    v-model="formData.TelephoneNumber"
-                  />
-                </div>
+                <DInput
+                  :inputType="'text'"
+                  :inputStyle="'primary-input'"
+                  v-model="formData.TelephoneNumber"
+                  >ĐT cố định</DInput
+                >
 
-                <div class="normal-box">
-                  <label for="email" class="top-label">Email</label>
-                  <input
-                    type="email"
-                    id="email"
-                    class="primary-input"
-                    v-model="formData.Email"
-                  />
-                  <div class="tool-tip-container">
-                    <div class="wrong-notif-tooltip">
-                      Email không đúng định dạng
-                    </div>
-                  </div>
-                </div>
+                <DInput
+                  :inputType="'text'"
+                  :inputStyle="'primary-input'"
+                  :notifTooltip="'Email không đúng định dạng.'"
+                  v-model="formData.Email"
+                  >Email</DInput
+                >
               </div>
 
               <!-- BANK INFO
                   ex: account, name, branch -->
               <div id="bank-info" class="rows-flexbox">
-                <div class="normal-box">
-                  <label for="bank-account" class="top-label"
-                    >Tài khoản ngân hàng</label
-                  >
-                  <input
-                    type="text"
-                    id="bank-account"
-                    class="primary-input"
-                    v-model="formData.BankAccountNumber"
-                  />
-                </div>
+                <DInput
+                  :inputType="'text'"
+                  :inputStyle="'primary-input'"
+                  v-model="formData.BankAccountNumber"
+                  >Tài khoản ngân hàng</DInput
+                >
 
-                <div class="normal-box">
-                  <label for="bank-name" class="top-label">Tên ngân hàng</label>
-                  <input
-                    type="text"
-                    id="bank-name"
-                    class="primary-input"
-                    v-model="formData.BankName"
-                  />
-                </div>
+                <DInput
+                  :inputType="'text'"
+                  :inputStyle="'primary-input'"
+                  v-model="formData.BankName"
+                  >Tên ngân hàng</DInput
+                >
 
-                <div class="normal-box">
-                  <label for="bank-branch" class="top-label">Chi nhánh</label>
-                  <input
-                    type="text"
-                    id="bank-branch"
-                    class="primary-input"
-                    v-model="formData.BankBranchName"
-                  />
-                </div>
+                <DInput
+                  :inputType="'text'"
+                  :inputStyle="'primary-input'"
+                  v-model="formData.BankBranchName"
+                  >Chi nhánh</DInput
+                >
               </div>
             </div>
 
