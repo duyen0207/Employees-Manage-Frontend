@@ -1,8 +1,6 @@
 <template lang="">
   <div id="dialog">
-    <div v-show="isShowDialog" class="modal"
-    style="z-index: 10;"
-    >
+    <div v-show="isShowDialog" class="modal" style="z-index: 10">
       <div class="notif-window modal-content">
         <div class="notif-msg rows-flexbox">
           <div class="notif-icon">
@@ -25,8 +23,9 @@
           class="action-btn rows-flexbox"
           style="justify-content: center"
         >
+          <!-- đóng dialog, có thể có tùy chọn đóng form hoặc không -->
           <button
-            @click="closeDialog"
+            @click="closeDialogAndDoNext"
             id="close-success-notif"
             class="primary-btn"
           >
@@ -39,6 +38,7 @@
           v-else-if="dialogType == type.CONFIRM_SAVE"
           class="action-btn rows-flexbox"
         >
+          <!-- chỉ đóng dialog -->
           <button
             @click="closeDialog"
             id="cancel"
@@ -47,9 +47,9 @@
             Hủy
           </button>
           <div class="normal-box">
-            <!-- đóng cả dialog -->
+            <!-- đóng cả dialog và đóng form-->
             <button
-              @click="closeDialog"
+              @click="closeDialogAndDoNext"
               id="reject"
               class="primary-btn second-btn"
             >
@@ -89,7 +89,7 @@
 export default {
   data() {
     return {
-      isShowDialog: true,
+      isShowDialog: false,
       type: {
         // validate
         ERROR: "0",
@@ -134,6 +134,12 @@ export default {
       this.isShowDialog = false;
     },
 
+    // đóng dialog và gửi tín hiệu đến component cha
+    closeDialogAndDoNext() {
+      this.closeDialog();
+      this.$emit("afterCloseDialog");
+    },
+
     // xác nhận lưu
     confirmSave() {
       this.closeDialog();
@@ -150,7 +156,6 @@ export default {
 </script>
 <style lang="css">
 #dialog {
-    z-index: 10;
+  z-index: 10;
 }
-
 </style>

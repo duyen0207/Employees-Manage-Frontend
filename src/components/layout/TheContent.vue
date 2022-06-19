@@ -5,8 +5,9 @@
       ref="notifDialog"
       :messages="dialogMsg"
       :dialogType="dialogType"
-      @saveAgree="addOrEdit()"
-      @deleteAgree="btnDeleteOnClick()"
+      @saveAgree="addOrEdit"
+      @deleteAgree="btnDeleteOnClick"
+      @afterCloseDialog="btnAfterCloseDialog"
     />
 
     <!-- Content header ----------------------------------------------->
@@ -63,10 +64,10 @@
               </td>
               <td class="employee-code-column">{{ emp.EmployeeCode }}</td>
               <td class="fullname-column">{{ emp.EmployeeName }}</td>
-              <td class="sex-column">{{ emp.GenderName }}</td>
+              <td class="sex-column">{{ setGenderName(emp.Gender) }}</td>
               <td class="dob-column">{{ formatDate(emp.DateOfBirth) }}</td>
               <td class="personal-id-column">{{ emp.IdentityNumber }}</td>
-              <td class="position-column">{{ emp.Position }}</td>
+              <td class="position-column">{{ emp.EmployeePosition }}</td>
               <td class="department-column">{{ emp.DepartmentName }}</td>
               <td class="action-column">
                 <button
@@ -225,7 +226,7 @@
                       id="employee-position"
                       class="primary-input"
                       placeholder="Nhân viên"
-                      v-model="formData.Position"
+                      v-model="formData.EmployeePosition"
                     />
                   </div>
                 </div>
@@ -439,11 +440,16 @@
                   id="add-edit-btn"
                   type="button"
                   class="primary-btn second-btn"
-                  @click="btnSaveOnClick()"
+                  @click="btnSaveOnClick"
                 >
                   Cất
                 </button>
-                <button id="add-multi-btn" type="button" class="primary-btn">
+                <button
+                  id="add-multi-btn"
+                  type="button"
+                  class="primary-btn"
+                  @click="btnSaveOnClick(true)"
+                >
                   Cất và thêm
                 </button>
               </div>
@@ -491,6 +497,8 @@ export default {
       chosenEmployeeId: null,
 
       isShowForm: false,
+      saveAndNewMode: false,
+
       dialogMsg: ["Thêm mới thành công"],
       dialogType: "2",
 
@@ -516,11 +524,11 @@ export default {
         EmployeeName: "Tên",
         DepartmentId: "142cb08f-7c31-21fa-8e90-67245e8b283e",
         DepartmentName: "tên đơn vị",
-        Position: "Nhân Viên",
+        EmployeePosition: "Nhân Viên",
 
         DateOfBirth: null,
         Gender: "1",
-        GenderName: "Nam",
+        GenderName: String,
         IdentityNumber: "823923",
         IdentityDate: null,
         IdentityPlace: "Hà Nội",
@@ -574,6 +582,19 @@ export default {
       return "";
     },
 
+    // ktra giới tính
+    setGenderName(gender) {
+      let genderName = "";
+      if (gender == "1") {
+        genderName = "Nam";
+      }else if (gender == "2") {
+        genderName = "Nữ";
+      }else if (gender == "3") {
+        genderName = "Khác";
+      }
+      return genderName;
+    },
+
     // empty table
     emptyTable() {
       console.log("ĐANG EMPTY TABLE...");
@@ -607,7 +628,7 @@ export default {
       }
       console.log("set employee id: ", this.chosenEmployeeId);
     },
-    // reset lại employee id muốn sửa, xóa
+    // reset lại employee đã chọn
     resetChosenEmployeeId() {
       console.log("nhân viên được chọn là: ", this.chosenEmployeeId);
       this.chosenEmployeeId = null;
@@ -788,6 +809,8 @@ export default {
     // đóng form thông tin
     btnOnCloseForm() {
       this.isShowForm = false;
+      // reset lại mọi thứ
+      this.saveAndNewMode = false;
       this.resetForm();
       this.resetChosenEmployeeId();
     },
@@ -816,6 +839,7 @@ export default {
       }
 
       // hiển thị dialog
+      console.log("hiển thị dialog", this);
       this.$refs.notifDialog.showDialog();
     },
 
@@ -824,11 +848,14 @@ export default {
      */
 
     addOrEdit() {
-      const employee = this.formData;
+      // console.log("sau khi form đc set gender: ",this.formData.Gender, this.formData.GenderName);
+      let employee = this.formData;
+      employee.GenderName = this.setGenderName(employee.Gender);
 
       var me = this;
       let requestURL = `${SERVER_API_URL}`;
 
+      console.log("đang lưu lại cái ng này: ", this.chosenEmployeeId);
       // nếu đang ở trạng thái sửa
       if (this.chosenEmployeeId) {
         requestURL = `${SERVER_API_URL}/${this.chosenEmployeeId}`;
@@ -836,6 +863,7 @@ export default {
       } else {
         console.log("thêm hay sửa: ", this.apiMethod);
       }
+      console.log("aaaaaaaaaaaaaaaaaaaaa ", this.formData);
 
       axios({
         method: this.apiMethod,
@@ -857,6 +885,8 @@ export default {
           me.btnShowDialog("1");
           // reset choosen emp id
           me.resetChosenEmployeeId();
+          // load lại bảng
+          me.loadData();
         })
         .catch(function (error) {
           console.log(
@@ -870,8 +900,12 @@ export default {
         });
     },
 
-    // CẤT: thêm hoặc sửa: mặc định là thêm
-    btnSaveOnClick() {
+    // CẤT, CẤT VÀ THÊM
+    btnSaveOnClick(saveAndNewMode = false) {
+      // nếu chọn cất và thêm
+      if (saveAndNewMode == true) {
+        this.saveAndNewMode = saveAndNewMode;
+      }
       // lấy dữ liệu từ form
       const employee = this.formData;
       // validate
@@ -885,14 +919,19 @@ export default {
       }
     },
 
-    // CẤT VÀ THÊM MỚI: sửa và thêm nhiều employee một cách liên tục
-    btnSaveAndNew(employeeId = null) {
-      // lưu sửa và thêm
+    // sau khi đóng dialog
+    btnAfterCloseDialog() {
+      if (this.dialogType == "1") {
+        if (this.saveAndNewMode == false) {
+          this.btnOnCloseForm();
+        } else if (this.saveAndNewMode == true) {
+          // reset lại form
+          this.resetForm();
 
-      // reset lại form
-      this.resetForm();
-      // lấy mã nhân viên mới
-      this.getNewCode();
+          // lấy mã nhân viên mới
+          this.getNewCode();
+        }
+      }
     },
 
     // XÓA
@@ -907,6 +946,7 @@ export default {
             .then(function (res) {
               console.log("xóa thành công: ", res);
               console.log(res.data);
+              me.loadData();
 
               // reset emp id
               me.resetChosenEmployeeId();
@@ -928,6 +968,7 @@ export default {
     btnNewDuplicateOnClick(employeeId) {
       // get thông tin của employee để đẩy lên form
       this.btnShowForm(employeeId);
+      this.resetChosenEmployeeId();
       // lấy mã nhân viên mới và đẩy lên form
       this.getNewCode();
     },
