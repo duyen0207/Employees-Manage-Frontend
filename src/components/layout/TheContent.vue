@@ -22,10 +22,12 @@
       </button>
 
       <DInput
-        :inputType="myInput[0].inputType"
-        :inputStyle="myInput[0].inputStyle"
+        :inputType="'radio'"
+        :inputStyle="'primary-input'"
+        :optionGroups="radioGroups"
+        :radioName="'gender'"
         v-model="testInput"
-        >Mã</DInput
+        >Giới tính</DInput
       >
       <div>đây là input thay đổi: {{ testInput }}</div>
     </div>
@@ -152,6 +154,7 @@
                     <DInput
                       :inputType="'text'"
                       :inputStyle="'primary-input'"
+                      :wrapperStyle="'div-w-40'"
                       :placeHolder="'NV-001'"
                       required
                       v-model="formData.EmployeeCode"
@@ -161,6 +164,7 @@
                     <DInput
                       :inputType="'text'"
                       :inputStyle="'primary-input'"
+                      :wrapperStyle="'div-w-60'"
                       :placeHolder="'Nguyễn Văn A'"
                       :notifTooltip="'Tên không được để trống.'"
                       required
@@ -169,37 +173,14 @@
                     >
                   </div>
 
-                  <div class="normal-box">
-                    <label
-                      for="department-id"
-                      class="compulsory-label top-label"
-                      >Đơn vị</label
-                    >
-                    <select
-                      id="department-id"
-                      class="primary-input"
-                      required
-                      v-model="formData.DepartmentId"
-                    >
-                      <option value="142cb08f-7c31-21fa-8e90-67245e8b283e">
-                        Phòng nhân sự
-                      </option>
-                      <option value="17120d02-6ab5-3e43-18cb-66948daf6128">
-                        Phòng tuyển sinh
-                      </option>
-                      <option value="469b3ece-744a-45d5-957d-e8c757976496">
-                        Phòng sản xuất
-                      </option>
-                      <option value="4e272fc4-7875-78d6-7d32-6a1673ffca7c">
-                        Phòng đào tạo
-                      </option>
-                    </select>
-                    <div class="tool-tip-container">
-                      <div class="wrong-notif-tooltip">
-                        Đơn vị không được để trống
-                      </div>
-                    </div>
-                  </div>
+                  <DInput
+                    :inputType="'select'"
+                    :inputStyle="'primary-input'"
+                    :optionGroups="optionGroups"
+                    required
+                    v-model="formData.DepartmentId"
+                    >Đơn vị</DInput
+                  >
 
                   <DInput
                     :inputType="'text'"
@@ -218,54 +199,27 @@
                     <DInput
                       :inputType="'date'"
                       :inputStyle="'primary-input'"
+                      :wrapperStyle="'div-w-40'"
                       :notifTooltip="'Ngày sinh không hợp lệ.'"
                       v-model="formData.DateOfBirth"
                       >Ngày sinh</DInput
                     >
 
-                    <div class="normal-box div-sex">
-                      <label for="" class="top-label">Giới tính</label>
-                      <div
-                        id="sex-select-group"
-                        class="horizontal-select-group"
-                      >
-                        <input
-                          name="gender"
-                          type="radio"
-                          value="1"
-                          id="male"
-                          class=""
-                          v-model="formData.Gender"
-                        />
-                        <label for="male">Nam</label>
-
-                        <input
-                          name="gender"
-                          type="radio"
-                          value="2"
-                          id="female"
-                          class=""
-                          v-model="formData.Gender"
-                        />
-                        <label for="female">Nữ</label>
-
-                        <input
-                          name="gender"
-                          type="radio"
-                          value="3"
-                          id="other-gender"
-                          class=""
-                          v-model="formData.Gender"
-                        />
-                        <label for="other-gender">Khác</label>
-                      </div>
-                    </div>
+                    <DInput
+                      :inputType="'radio'"
+                      :inputStyle="'primary-input'"
+                      :optionGroups="radioGroups"
+                      :radioName="'gender'"
+                      v-model="formData.Gender"
+                      >Giới tính</DInput
+                    >
                   </div>
 
                   <div class="rows-flexbox">
                     <DInput
                       :inputType="'text'"
                       :inputStyle="'primary-input'"
+                      :wrapperStyle="'div-w-60'"
                       v-model="formData.IdentityNumber"
                       >Số CMND</DInput
                     >
@@ -273,6 +227,7 @@
                     <DInput
                       :inputType="'date'"
                       :inputStyle="'primary-input'"
+                      :wrapperStyle="'div-w-40'"
                       :notifTooltip="'Ngày cấp không hợp lệ.'"
                       v-model="formData.IdentityDate"
                       >Ngày cấp</DInput
@@ -420,18 +375,39 @@ export default {
   },
   data() {
     return {
-      testInput: "",
+      testInput: "1",
 
-      myInput: [
-        // loại 0, text
+      optionGroups: [
         {
-          inputStyle: "primary-input",
-          inputType: "text",
+          value: "142cb08f-7c31-21fa-8e90-67245e8b283e",
+          label: "Phòng nhân sự",
         },
-        // loại 1, radio
         {
-          inputStyle: "primary-input",
-          inputType: "radio",
+          value: "17120d02-6ab5-3e43-18cb-66948daf6128",
+          label: "Phòng tuyển sinh",
+        },
+        {
+          value: "469b3ece-744a-45d5-957d-e8c757976496",
+          label: "Phòng sản xuất",
+        },
+        {
+          value: "4e272fc4-7875-78d6-7d32-6a1673ffca7c",
+          label: "Phòng đào tạo",
+        },
+      ],
+
+      radioGroups: [
+        {
+          value: "1",
+          label: "Nam",
+        },
+        {
+          value: "2",
+          label: "Nữ",
+        },
+        {
+          value: "3",
+          label: "Khác",
         },
       ],
 
@@ -598,11 +574,8 @@ export default {
               employee.IdentityDate,
               "en-CA"
             );
-
             // hiển thị trên form
             me.formData = employee;
-
-            console.log("đưa thông tin nhân viên lên form: ");
           })
           .catch(function (res) {
             console.log("thế này là hỏng ", res);
@@ -807,6 +780,7 @@ export default {
         this.apiMethod = "put";
       } else {
         console.log("thêm hay sửa: ", this.apiMethod);
+        this.apiMethod = "post";
       }
       console.log("aaaaaaaaaaaaaaaaaaaaa ", this.formData);
 
@@ -931,8 +905,8 @@ export default {
 
   //mounted
   mounted() {
-    console.log("3. on mounted");
-    console.log("đây là dialog mình tạo ra: ", this.$refs.notifDialog);
+    // console.log("3. on mounted");
+    // console.log("đây là dialog mình tạo ra: ", this.$refs.notifDialog);
     // this.$refs.notifDialog.showDialog();
   },
 
@@ -941,8 +915,8 @@ export default {
 
   // updated
   updated() {
-    console.log("5. on updated");
-    console.log("updated: người được chọn: ", this.chosenEmployeeId);
+    // console.log("5. on updated");
+    // console.log("updated: người được chọn: ", this.chosenEmployeeId);
   },
 };
 </script>

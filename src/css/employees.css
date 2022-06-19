@@ -2,7 +2,7 @@
 
 #employee-form {
   /* display: none; */
-  padding: 16px 30px;
+  padding: 16px 35px;
   width: 70%;
   border: solid 1px black;
 
@@ -50,18 +50,15 @@ hr.divider {
 
 /* Employee info */
 #employee-info {
-  margin-right: 10px;
+  margin-right: 24px;
 }
 /* ---------------------- */
 
-.div-employee-code,
-.div-id-issued-on,
-.div-birthday {
+.div-w-40 {
   width: 40%;
 }
 
-.div-personal-id,
-.div-fullname {
+.div-w-60 {
   width: 60%;
 }
 
