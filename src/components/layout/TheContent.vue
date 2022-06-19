@@ -20,6 +20,14 @@
       >
         Thêm mới nhân viên
       </button>
+
+      <DInput
+        :inputType="myInput[0].inputType"
+        :inputStyle="myInput[0].inputStyle"
+        v-model="testInput"
+        >Mã</DInput
+      >
+      <div>đây là input thay đổi: {{ testInput }}</div>
     </div>
 
     <!-- Main content ----------------------------------------------->
@@ -141,7 +149,7 @@
                       -->
                 <div class="" id="employee-info">
                   <div class="rows-flexbox">
-                    <div class="normal-box div-employee-code">
+                    <!-- <div class="normal-box div-employee-code">
                       <label
                         for="employee-code"
                         class="compulsory-label top-label"
@@ -162,7 +170,14 @@
                           Mã nhân viên không được để trống
                         </div>
                       </div>
-                    </div>
+                    </div> -->
+                    <DInput
+                      :inputType="myInput[0].inputType"
+                      :inputStyle="myInput[0].inputStyle"
+                      v-model="formData.EmployeeCode"
+                      required
+                      >Mã</DInput
+                    >
 
                     <div class="normal-box div-fullname">
                       <label
@@ -467,6 +482,7 @@ import axios from "axios";
 // import các components
 import DCombobox from "@/components/base/Combobox.vue";
 import DDialog from "@/components/base/Dialog.vue";
+import DInput from "@/components/base/Input.vue";
 
 const SERVER_API_URL = "https://amis.manhnv.net/api/v1/Employees";
 
@@ -489,9 +505,25 @@ export default {
   components: {
     DCombobox,
     DDialog,
+    DInput,
   },
   data() {
     return {
+      testInput: "",
+
+      myInput: [
+        // loại 0, text
+        {
+          inputStyle: "primary-input",
+          inputType: "text",
+        },
+        // loại 1, radio
+        {
+          inputStyle: "primary-input",
+          inputType: "radio",
+        },
+      ],
+
       employees: [],
       searchPattern: "",
       chosenEmployeeId: null,
@@ -587,9 +619,9 @@ export default {
       let genderName = "";
       if (gender == "1") {
         genderName = "Nam";
-      }else if (gender == "2") {
+      } else if (gender == "2") {
         genderName = "Nữ";
-      }else if (gender == "3") {
+      } else if (gender == "3") {
         genderName = "Khác";
       }
       return genderName;
@@ -628,12 +660,14 @@ export default {
       }
       console.log("set employee id: ", this.chosenEmployeeId);
     },
+
     // reset lại employee đã chọn
     resetChosenEmployeeId() {
       console.log("nhân viên được chọn là: ", this.chosenEmployeeId);
       this.chosenEmployeeId = null;
       console.log("reset thành công.");
     },
+
     // lấy thông tin cụ thể của 1 employee
     getEmployeeInfo(employeeId) {
       try {
