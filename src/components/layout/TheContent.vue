@@ -20,16 +20,6 @@
       >
         Thêm mới nhân viên
       </button>
-
-      <DInput
-        :inputType="'radio'"
-        :inputStyle="'primary-input'"
-        :optionGroups="radioGroups"
-        :radioName="'gender'"
-        v-model="testInput"
-        >Giới tính</DInput
-      >
-      <div>đây là input thay đổi: {{ testInput }}</div>
     </div>
 
     <!-- Main content ----------------------------------------------->
@@ -48,7 +38,7 @@
         </button>
       </div>
       <!-- Data table ------------------------------------------->
-      <div id="data-table-container" class="normal-box">
+      <!-- <div id="data-table-container" class="normal-box">
         <table id="employees-data-table" class="data-table">
           <thead class="header-table">
             <tr>
@@ -100,8 +90,41 @@
             </tr>
           </tbody>
         </table>
+      </div> -->
+
+
+      <DTable v-model:employees="employees" 
+        @rowEdit="btnShowForm"
+        @rowDuplicate="btnNewDuplicateOnClick"
+        @rowDelete="btnShowDialog"
+      />
+
+      <!-- Paginate -->
+      <div class="rows-flexbox table-footer">
+        <div>Tổng số bản ghi: {{ employees.length }}</div>
+        <div>
+          <select
+            v-model="pageSize"
+            class="primary-input"
+            name="paging"
+            id="records-num-pagination"
+          >
+            <option value="20">20 bản ghi trên 1 trang</option>
+            <option value="30">30 bản ghi trên 1 trang</option>
+            <option value="50">50 bản ghi trên 1 trang</option>
+            <option value="100">100 bản ghi trên 1 trang</option>
+          </select>
+
+          pagination
+          <div class="rows-flexbox">
+            <div>Trước</div>
+            <div></div>
+            <div>Sau</div>
+          </div>
+        </div>
       </div>
     </div>
+
     <!-- Form -->
     <div id="form-container">
       <div v-show="isShowForm" class="modal">
@@ -344,11 +367,13 @@
 <script>
 // import các thư viện
 import axios from "axios";
+// import Paginate from "vuejs-paginate-next";
 
 // import các components
 import DCombobox from "@/components/base/Combobox.vue";
 import DDialog from "@/components/base/Dialog.vue";
 import DInput from "@/components/base/Input.vue";
+import DTable from "@/components/base/Table.vue"
 
 const SERVER_API_URL = "https://amis.manhnv.net/api/v1/Employees";
 
@@ -372,11 +397,11 @@ export default {
     DCombobox,
     DDialog,
     DInput,
+    DTable,
+    // Paginate,
   },
   data() {
     return {
-      testInput: "1",
-
       optionGroups: [
         {
           value: "142cb08f-7c31-21fa-8e90-67245e8b283e",
@@ -412,6 +437,8 @@ export default {
       ],
 
       employees: [],
+      pageNumber: "1",
+      pageSize: "20",
       searchPattern: "",
       chosenEmployeeId: null,
 
@@ -475,7 +502,9 @@ export default {
         axios
           .get(searchURL)
           .then(function (res) {
-            me.employees = res.data.Data;
+            if(res.data.Data) me.employees = res.data.Data;
+            else if (!res.data.Data) me.employees = [];
+            
             console.log("search result: ", me.employees);
           })
           .catch(function (res) {
@@ -537,6 +566,27 @@ export default {
           });
       } catch (error) {
         console.log("lỗi khi created: ", error);
+      }
+    },
+
+    // danh sách nv theo trang
+    employeesInPage() {
+      try {
+        let paginateURL = `${SERVER_API_URL}/filter?pageSize=${this.pageSize}&pageNumber=1`;
+
+        var me = this;
+        // gọi api search
+        axios
+          .get(paginateURL)
+          .then(function (res) {
+            me.employees = res.data.Data;
+            console.log("employee của trang: ", me.employees);
+          })
+          .catch(function (res) {
+            console.log(res);
+          });
+      } catch (error) {
+        console.log("lỗi khi lọc: ", error);
       }
     },
 
@@ -922,4 +972,10 @@ export default {
 </script>
 <style lang="css">
 @import url("@/css/layout/content.css");
+
+/* Write your own CSS for pagination */
+.pagination {
+}
+.page-item {
+}
 </style>

@@ -5,7 +5,7 @@
   --menu-item-hover: #646464;
 
   width: 200px;
-  flex-basis: 200px;
+  /* flex-basis: 200px; */
   background-color: var(--navbar-color);
 }
 
@@ -43,6 +43,7 @@
 /* menu item--------------------- */
 .main-menu {
   height: calc(100vh - 48px);
+  width: 172px;
 }
 .main-menu li.normal-box{
   list-style-type: none;
