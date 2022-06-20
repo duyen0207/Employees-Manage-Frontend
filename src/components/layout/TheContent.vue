@@ -38,61 +38,6 @@
         </button>
       </div>
       <!-- Data table ------------------------------------------->
-      <!-- <div id="data-table-container" class="normal-box">
-        <table id="employees-data-table" class="data-table">
-          <thead class="header-table">
-            <tr>
-              <th class="checkbox-column">
-                <input type="checkbox" class="check-all" />
-              </th>
-              <th class="employee-code-column">MÃ NHÂN VIÊN</th>
-              <th class="fullname-column">TÊN NHÂN VIÊN</th>
-              <th class="sex-column">GIỚI TÍNH</th>
-              <th class="dob-column">NGÀY SINH</th>
-              <th class="personal-id-column" title="Số chứng minh nhân dân">
-                SỐ CMND
-              </th>
-              <th class="position-column">CHỨC DANH</th>
-              <th class="department-column">TÊN ĐƠN VỊ</th>
-              <th class="action-column">CHỨC NĂNG</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="emp in employees" :key="emp.EmployeeId">
-              <td :id="emp.EmployeeId" class="checkbox-column">
-                <input type="checkbox" name="" id="" class="check-item" />
-              </td>
-              <td class="employee-code-column">{{ emp.EmployeeCode }}</td>
-              <td class="fullname-column">{{ emp.EmployeeName }}</td>
-              <td class="sex-column">{{ setGenderName(emp.Gender) }}</td>
-              <td class="dob-column">{{ formatDate(emp.DateOfBirth) }}</td>
-              <td class="personal-id-column">{{ emp.IdentityNumber }}</td>
-              <td class="position-column">{{ emp.EmployeePosition }}</td>
-              <td class="department-column">{{ emp.DepartmentName }}</td>
-              <td class="action-column">
-                <button
-                  data-employee-id="{{emp.EmployeeId}}"
-                  class="none-btn edit-employee-btn"
-                  style="color: rgb(56, 148, 234)"
-                  @click="btnShowForm(emp.EmployeeId)"
-                >
-                  Sửa
-                </button>
-                <DCombobox
-                  :emp="emp"
-                  :selectOptions="selectOptions"
-                  @duplicateEmp="btnNewDuplicateOnClick(emp.EmployeeId)"
-                  @deleteEmp="
-                    btnShowDialog('3', emp.EmployeeCode, emp.EmployeeId)
-                  "
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div> -->
-
-
       <DTable v-model:employees="employees" 
         @rowEdit="btnShowForm"
         @rowDuplicate="btnNewDuplicateOnClick"
@@ -625,7 +570,8 @@ export default {
               "en-CA"
             );
             // hiển thị trên form
-            me.formData = employee;
+            let {EmployeeId, ...empData} = employee;
+            me.formData = empData;
           })
           .catch(function (res) {
             console.log("thế này là hỏng ", res);
