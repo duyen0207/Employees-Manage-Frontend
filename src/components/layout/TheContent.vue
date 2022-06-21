@@ -33,12 +33,13 @@
           placeholder="Tìm kiếm theo mã, tên nhân viên"
           v-model="searchPattern"
         />
-        <button id="reload-data" class="none-btn" @click="loadData">
+        <button id="reload-data" class="none-btn" @click="employeesInPage">
           <font-awesome-icon icon="fa-solid fa-arrow-rotate-right" />
         </button>
       </div>
       <!-- Data table ------------------------------------------->
-      <DTable v-model:employees="employees" 
+      <DTable
+        v-model:employees="employees"
         @rowEdit="btnShowForm"
         @rowDuplicate="btnNewDuplicateOnClick"
         @rowDelete="btnShowDialog"
@@ -46,8 +47,8 @@
 
       <!-- Paginate -->
       <div class="rows-flexbox table-footer">
-        <div>Tổng số bản ghi: {{ employees.length }}</div>
-        <div>
+        <div>Tổng số bản ghi: {{ totalRecords }}</div>
+        <div class="rows-flexbox pagination">
           <select
             v-model="pageSize"
             class="primary-input"
@@ -60,11 +61,41 @@
             <option value="100">100 bản ghi trên 1 trang</option>
           </select>
 
-          pagination
-          <div class="rows-flexbox">
-            <div>Trước</div>
-            <div></div>
-            <div>Sau</div>
+          <div class="rows-flexbox pagination-group-btn">
+            <button
+              class="paginate-direction-btn"
+              :disabled="pageNumber == 1 ? true : false"
+              @click="backPage"
+            >
+              Trước
+            </button>
+            <span v-for="(item, index) in new Array(totalPages)" :key="index">
+              <span
+                class="pagination-more-index"
+                v-if="
+                  index + 1 == totalPages - 1 && pageNumber < totalPages - 4
+                "
+                >...</span
+              >
+              <button
+                :class="[
+                  pageNumber == index + 1 ? 'pagination-index-btn-focus' : '',
+                  'pagination-index-btn',
+                ]"
+                v-else
+                v-show="showPagination(index)"
+                @click="pageNumber = index + 1"
+              >
+                {{ index + 1 }}
+              </button>
+            </span>
+            <button
+              class="paginate-direction-btn"
+              :disabled="pageNumber == totalPages ? true : false"
+              @click="nextPage"
+            >
+              Sau
+            </button>
           </div>
         </div>
       </div>
@@ -318,7 +349,8 @@ import axios from "axios";
 import DCombobox from "@/components/base/Combobox.vue";
 import DDialog from "@/components/base/Dialog.vue";
 import DInput from "@/components/base/Input.vue";
-import DTable from "@/components/base/Table.vue"
+import DTable from "@/components/base/Table.vue";
+import { watch } from "@vue/runtime-core";
 
 const SERVER_API_URL = "https://amis.manhnv.net/api/v1/Employees";
 
@@ -382,8 +414,12 @@ export default {
       ],
 
       employees: [],
-      pageNumber: "1",
+
+      totalRecords: 0,
+      totalPages: 0,
+      pageNumber: 1,
       pageSize: "20",
+
       searchPattern: "",
       chosenEmployeeId: null,
 
@@ -447,9 +483,12 @@ export default {
         axios
           .get(searchURL)
           .then(function (res) {
-            if(res.data.Data) me.employees = res.data.Data;
-            else if (!res.data.Data) me.employees = [];
-            
+            if (res.data.Data) {
+              me.employees = res.data.Data;
+              me.totalPages = res.data.TotalPage;
+              me.totalRecords = res.data.TotalRecord;
+            } else if (!res.data.Data) me.employees = [];
+
             console.log("search result: ", me.employees);
           })
           .catch(function (res) {
@@ -459,9 +498,60 @@ export default {
         console.log("lỗi khi search: ", error);
       }
     },
+
+    pageNumber(newPageNumber) {
+      console.log("new value: ", newPageNumber);
+      this.employeesInPage();
+    },
+    pageSize(newPageSize) {
+      console.log("new size: ", newPageSize);
+      this.employeesInPage();
+    },
   },
 
   methods: {
+    // quay lại paginate index trước
+    backPage() {
+      if (this.pageNumber == 1) {
+        return true;
+      } else {
+        this.pageNumber -= 1;
+        return false;
+      }
+    },
+    // chuyển đến paginate index đằng sau
+    nextPage() {
+      if (this.pageNumber == this.totalPages) {
+        return true;
+      } else {
+        this.pageNumber += 1;
+        return false;
+      }
+    },
+    // hiển thị index của các trang
+    showPagination(index) {
+      let isShowPageIndex = false;
+      // nếu số trang <5 hoặc là trang cuối
+      if (
+        this.totalPages <= 5 ||
+        index + 1 == this.totalPages ||
+        (index + 1 == this.totalPages - 1 &&
+          this.pageNumber < this.totalPages - 4)
+      )
+        isShowPageIndex = true;
+      // nếu pageNumber nằm trong 5 trang cuối
+      else if (
+        this.pageNumber >= this.totalPages - 4 &&
+        index + 1 >= this.totalPages - 4
+      )
+        isShowPageIndex = true;
+      // nếu index >= pageNumber và nhỏ hơn pageNumber +4
+      else if (index + 1 >= this.pageNumber && index + 1 <= this.pageNumber + 3)
+        isShowPageIndex = true;
+
+      return isShowPageIndex;
+    },
+
     /**
      * chuẩn hóa ngày theo format
      * default: dd/mm/yyyy
@@ -505,6 +595,7 @@ export default {
           .then(function (res) {
             me.employees = res.data.Data;
             console.log("this is data: ", me.employees);
+            me.totalRecords = me.employees.length;
           })
           .catch(function (res) {
             console.log(res);
@@ -514,10 +605,11 @@ export default {
       }
     },
 
-    // danh sách nv theo trang
+    // load danh sách nv theo trang
     employeesInPage() {
+      console.log("phân trang: ");
       try {
-        let paginateURL = `${SERVER_API_URL}/filter?pageSize=${this.pageSize}&pageNumber=1`;
+        let paginateURL = `${SERVER_API_URL}/filter?pageSize=${this.pageSize}&pageNumber=${this.pageNumber}`;
 
         var me = this;
         // gọi api search
@@ -525,7 +617,9 @@ export default {
           .get(paginateURL)
           .then(function (res) {
             me.employees = res.data.Data;
-            console.log("employee của trang: ", me.employees);
+
+            me.totalPages = res.data.TotalPage;
+            me.totalRecords = res.data.TotalRecord;
           })
           .catch(function (res) {
             console.log(res);
@@ -570,7 +664,7 @@ export default {
               "en-CA"
             );
             // hiển thị trên form
-            let {EmployeeId, ...empData} = employee;
+            let { EmployeeId, ...empData } = employee;
             me.formData = empData;
           })
           .catch(function (res) {
@@ -778,7 +872,6 @@ export default {
         console.log("thêm hay sửa: ", this.apiMethod);
         this.apiMethod = "post";
       }
-      console.log("aaaaaaaaaaaaaaaaaaaaa ", this.formData);
 
       axios({
         method: this.apiMethod,
@@ -801,7 +894,7 @@ export default {
           // reset choosen emp id
           me.resetChosenEmployeeId();
           // load lại bảng
-          me.loadData();
+          me.employeesInPage();
         })
         .catch(function (error) {
           console.log(
@@ -861,7 +954,7 @@ export default {
             .then(function (res) {
               console.log("xóa thành công: ", res);
               console.log(res.data);
-              me.loadData();
+              me.employeesInPage();
 
               // reset emp id
               me.resetChosenEmployeeId();
@@ -893,7 +986,8 @@ export default {
   created() {
     console.log("1. content created");
 
-    this.loadData();
+    // this.loadData();
+    this.employeesInPage();
     this.isShowForm = false;
   },
   //before mount
@@ -917,11 +1011,6 @@ export default {
 };
 </script>
 <style lang="css">
+@import url("@/css/base/pagination.css");
 @import url("@/css/layout/content.css");
-
-/* Write your own CSS for pagination */
-.pagination {
-}
-.page-item {
-}
 </style>
