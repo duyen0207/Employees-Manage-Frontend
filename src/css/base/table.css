@@ -1,18 +1,23 @@
 /* normal data table */
-#data-table-container{
+#data-table-container {
   height: 400px;
+  width: 960px;
+
   border-bottom: 1px solid gray;
 
   overflow: auto;
-
 }
 
-.table-footer{
+#data-table-container tbody {
+  height: 400px;
+}
+
+.table-footer {
   height: 48px;
   justify-content: space-between;
 }
 
-.header-table{
+.header-table {
   position: sticky;
   top: 0;
   z-index: 2;
@@ -23,8 +28,9 @@
   --table-row-hover: #eceef1;
 
   width: 100%;
-  border-collapse: collapse;
-  padding: 0 10px;
+  border-collapse: separate;
+  border-spacing: 0px;
+  padding: 0;
 }
 
 /* table row--------------------- */
@@ -36,9 +42,12 @@
 .data-table th {
   padding: 0 4px;
   border: 1px solid #ddd;
+  min-width: 120px;
+  max-width: 200px;
 }
 
 /* table header------------------- */
+
 .data-table .header-table {
   height: 32px;
 
@@ -59,41 +68,63 @@
 }
 
 /* Specific column---------------- */
+.data-table td.fullname-column, .data-table th.fullname-column{
+  min-width: 200px;
+}
+
 .data-table .checkbox-column {
-  width: 24px;
+  width: 30px;
+  min-width: 42px;
   padding: 0 4px;
+
+  position: sticky;
+  left: 0;
+
+  background-color: white;
+
+  text-align: center;
 }
 
-.employee-code-column {
+.data-table .action-column {
+  position: sticky;
+  right: 0;
+  border: 1px solid #ddd;
+
+  background-color: white;
+  text-align: center;
 }
 
-.fullname-column {
+.data-table th.action-column,
+.data-table th.checkbox-column {
+  background-color: var(--table-row-color);
 }
 
-.sex-column {
+.data-table .sex-column {
   width: 74px;
 
   text-align: center;
 }
 
-.dob-column {
+.data-table .dob-column {
   width: 82px;
   text-align: center;
 }
 
-.personal-id-column {
-}
 
-.position-column {
-}
 
-.department-column {
-}
-
-.action-column {
-  position: relative;
-  text-align: center;
-}
 .data-row:hover > .action-column button {
   background-color: var(--table-row-hover);
+}
+
+/* scroll bar----------------------- */
+#data-table-container::-webkit-scrollbar {
+  width: 8px;
+  height: 10px;
+}
+
+#data-table-container::-webkit-scrollbar-thumb {
+  background: #b8bcc3;
+}
+#data-table-container::-webkit-scrollbar-track {
+  background: #fff;
 }

@@ -60,11 +60,7 @@
     <!-- Form -->
     <div id="form-container">
       <div v-show="isShowForm" class="modal">
-        <form
-          action=""
-          method="post"
-          id="employee-form"
-          class="modal-content animate"
+        <form action="" method="post" id="employee-form" class="modal-content animate"
         >
           <div id="new-employee-container">
             <!-- Form title ------------------------>
@@ -86,10 +82,7 @@
                     icon="fa-regular fa-circle-question"
                   ></font-awesome-icon>
                 </button>
-                <button
-                  type="button"
-                  id="close-btn"
-                  class="icon"
+                <button type="button" id="close-btn" class="icon"
                   @click="btnOnCloseForm"
                 >
                   <font-awesome-icon icon="fa-solid fa-xmark" />
