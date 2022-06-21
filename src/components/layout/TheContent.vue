@@ -49,56 +49,6 @@
         <div>Tổng số bản ghi: {{ totalRecords }}</div>
         <!-- Paginate -->
 
-        <!-- <div class="rows-flexbox pagination">
-          <select
-            v-model="pageSize"
-            class="primary-input"
-            name="paging"
-            id="records-num-pagination"
-          >
-            <option value="20">20 bản ghi trên 1 trang</option>
-            <option value="30">30 bản ghi trên 1 trang</option>
-            <option value="50">50 bản ghi trên 1 trang</option>
-            <option value="100">100 bản ghi trên 1 trang</option>
-          </select>
-
-          <div class="rows-flexbox pagination-group-btn">
-            <button
-              class="paginate-direction-btn"
-              :disabled="pageNumber == 1 ? true : false"
-              @click="backPage"
-            >
-              Trước
-            </button>
-            <span v-for="(item, index) in new Array(totalPages)" :key="index">
-              <span
-                class="pagination-more-index"
-                v-if="
-                  index + 1 == totalPages - 1 && pageNumber < totalPages - 4
-                "
-                >...</span
-              >
-              <button
-                :class="[
-                  pageNumber == index + 1 ? 'pagination-index-btn-focus' : '',
-                  'pagination-index-btn',
-                ]"
-                v-else
-                v-show="showPagination(index)"
-                @click="pageNumber = index + 1"
-              >
-                {{ index + 1 }}
-              </button>
-            </span>
-            <button
-              class="paginate-direction-btn"
-              :disabled="pageNumber == totalPages ? true : false"
-              @click="nextPage"
-            >
-              Sau
-            </button>
-          </div>
-        </div> -->
         <DPagination
           v-model:pageNumber="pageNumber"
           v-model:pageSize="pageSize"
