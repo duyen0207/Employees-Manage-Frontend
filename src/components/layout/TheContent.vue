@@ -45,10 +45,11 @@
         @rowDelete="btnShowDialog"
       />
 
-      <!-- Paginate -->
       <div class="rows-flexbox table-footer">
         <div>Tổng số bản ghi: {{ totalRecords }}</div>
-        <div class="rows-flexbox pagination">
+        <!-- Paginate -->
+
+        <!-- <div class="rows-flexbox pagination">
           <select
             v-model="pageSize"
             class="primary-input"
@@ -97,7 +98,12 @@
               Sau
             </button>
           </div>
-        </div>
+        </div> -->
+        <DPagination
+          v-model:pageNumber="pageNumber"
+          v-model:pageSize="pageSize"
+          v-model:totalPages="totalPages"
+        />
       </div>
     </div>
 
@@ -343,14 +349,13 @@
 <script>
 // import các thư viện
 import axios from "axios";
-// import Paginate from "vuejs-paginate-next";
 
 // import các components
 import DCombobox from "@/components/base/Combobox.vue";
 import DDialog from "@/components/base/Dialog.vue";
 import DInput from "@/components/base/Input.vue";
 import DTable from "@/components/base/Table.vue";
-import { watch } from "@vue/runtime-core";
+import DPagination from "@/components/base/Pagination.vue";
 
 const SERVER_API_URL = "https://amis.manhnv.net/api/v1/Employees";
 
@@ -375,7 +380,7 @@ export default {
     DDialog,
     DInput,
     DTable,
-    // Paginate,
+    DPagination,
   },
   data() {
     return {
@@ -476,7 +481,7 @@ export default {
     searchPattern(newSearchPattern) {
       try {
         console.log("Searching...", newSearchPattern);
-        let searchURL = `${SERVER_API_URL}/filter?employeeFilter=${this.searchPattern}`;
+        let searchURL = `${SERVER_API_URL}/filter?pageSize=${this.pageSize}&pageNumber=${this.pageNumber}&employeeFilter=${this.searchPattern}`;
 
         var me = this;
         // gọi api search
@@ -487,8 +492,12 @@ export default {
               me.employees = res.data.Data;
               me.totalPages = res.data.TotalPage;
               me.totalRecords = res.data.TotalRecord;
-            } else if (!res.data.Data) me.employees = [];
-
+              console.log(me.totalPages, me.totalRecords);
+            } else if (!res.data.Data) {
+              me.employees = [];
+              me.totalPages = 1;
+              me.totalRecords = 0;
+            }
             console.log("search result: ", me.employees);
           })
           .catch(function (res) {
@@ -500,11 +509,11 @@ export default {
     },
 
     pageNumber(newPageNumber) {
-      console.log("new value: ", newPageNumber);
+      console.log("new page number: ", newPageNumber);
       this.employeesInPage();
     },
     pageSize(newPageSize) {
-      console.log("new size: ", newPageSize);
+      console.log("new page size: ", newPageSize);
       this.employeesInPage();
     },
   },
@@ -584,7 +593,7 @@ export default {
       this.employees = [];
     },
 
-    // gọi api load dữ liệu
+    // gọi api load toàn bộ dữ liệu
     loadData() {
       try {
         console.log("load data");
@@ -607,7 +616,6 @@ export default {
 
     // load danh sách nv theo trang
     employeesInPage() {
-      console.log("phân trang: ");
       try {
         let paginateURL = `${SERVER_API_URL}/filter?pageSize=${this.pageSize}&pageNumber=${this.pageNumber}`;
 
