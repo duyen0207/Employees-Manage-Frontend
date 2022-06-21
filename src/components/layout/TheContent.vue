@@ -47,8 +47,8 @@
 
       <div class="rows-flexbox table-footer">
         <div>Tổng số bản ghi: {{ totalRecords }}</div>
-        <!-- Paginate -->
 
+        <!-- Paginate -->
         <DPagination
           v-model:pageNumber="pageNumber"
           v-model:pageSize="pageSize"
@@ -106,21 +106,15 @@
                       -->
                 <div class="" id="employee-info">
                   <div class="rows-flexbox">
-                    <DInput
-                      :inputType="'text'"
-                      :inputStyle="'primary-input'"
+                    <DInput :inputType="'text'" :inputStyle="'primary-input'" 
                       :wrapperStyle="'div-w-40'"
-                      :placeHolder="'NV-001'"
-                      required
+                      :placeHolder="'NV-001'" required
                       v-model="formData.EmployeeCode"
                       >Mã</DInput
                     >
 
-                    <DInput
-                      :inputType="'text'"
-                      :inputStyle="'primary-input'"
-                      :wrapperStyle="'div-w-60'"
-                      :placeHolder="'Nguyễn Văn A'"
+                    <DInput :inputType="'text'" :inputStyle="'primary-input'"
+                      :wrapperStyle="'div-w-60'" :placeHolder="'Nguyễn Văn A'"
                       :notifTooltip="'Tên không được để trống.'"
                       required
                       v-model="formData.EmployeeName"
@@ -128,18 +122,13 @@
                     >
                   </div>
 
-                  <DInput
-                    :inputType="'select'"
-                    :inputStyle="'primary-input'"
-                    :optionGroups="optionGroups"
-                    required
+                  <DInput :inputType="'select'" :inputStyle="'primary-input'"
+                    :optionGroups="optionGroups" required
                     v-model="formData.DepartmentId"
                     >Đơn vị</DInput
                   >
 
-                  <DInput
-                    :inputType="'text'"
-                    :inputStyle="'primary-input'"
+                  <DInput :inputType="'text'" :inputStyle="'primary-input'"
                     :placeHolder="'Nhân viên'"
                     v-model="formData.EmployeePosition"
                     >Chức danh</DInput
@@ -151,56 +140,41 @@
                       -->
                 <div class="" id="personal-info">
                   <div class="rows-flexbox">
-                    <DInput
-                      :inputType="'date'"
-                      :inputStyle="'primary-input'"
-                      :wrapperStyle="'div-w-40'"
-                      :notifTooltip="'Ngày sinh không hợp lệ.'"
+                    <DInput :inputType="'date'" :inputStyle="'primary-input'"
+                      :wrapperStyle="'div-w-40'" :notifTooltip="'Ngày sinh không hợp lệ.'"
                       v-model="formData.DateOfBirth"
                       >Ngày sinh</DInput
                     >
 
-                    <DInput
-                      :inputType="'radio'"
-                      :inputStyle="'primary-input'"
-                      :optionGroups="radioGroups"
-                      :radioName="'gender'"
+                    <DInput :inputType="'radio'" :inputStyle="'primary-input'"
+                      :optionGroups="radioGroups" :radioName="'gender'"
                       v-model="formData.Gender"
                       >Giới tính</DInput
                     >
                   </div>
 
                   <div class="rows-flexbox">
-                    <DInput
-                      :inputType="'text'"
-                      :inputStyle="'primary-input'"
+                    <DInput :inputType="'text'" :inputStyle="'primary-input'"
                       :wrapperStyle="'div-w-60'"
                       v-model="formData.IdentityNumber"
                       >Số CMND</DInput
                     >
 
-                    <DInput
-                      :inputType="'date'"
-                      :inputStyle="'primary-input'"
-                      :wrapperStyle="'div-w-40'"
-                      :notifTooltip="'Ngày cấp không hợp lệ.'"
+                    <DInput :inputType="'date'" :inputStyle="'primary-input'"
+                      :wrapperStyle="'div-w-40'" :notifTooltip="'Ngày cấp không hợp lệ.'"
                       v-model="formData.IdentityDate"
                       >Ngày cấp</DInput
                     >
                   </div>
 
-                  <DInput
-                    :inputType="'text'"
-                    :inputStyle="'primary-input'"
+                  <DInput :inputType="'text'" :inputStyle="'primary-input'"
                     v-model="formData.IdentityPlace"
                     >Nơi cấp</DInput
                   >
                 </div>
               </div>
               <!-- ADDRESS -->
-              <DInput
-                :inputType="'text'"
-                :inputStyle="'primary-input'"
+              <DInput :inputType="'text'" :inputStyle="'primary-input'"
                 v-model="formData.Address"
                 >Địa chỉ</DInput
               >
@@ -208,23 +182,17 @@
               <!-- CONTACT INFO
                   ex: phone number, email -->
               <div id="contact" class="rows-flexbox">
-                <DInput
-                  :inputType="'text'"
-                  :inputStyle="'primary-input'"
+                <DInput :inputType="'text'" :inputStyle="'primary-input'"
                   v-model="formData.PhoneNumber"
                   >ĐT di động</DInput
                 >
 
-                <DInput
-                  :inputType="'text'"
-                  :inputStyle="'primary-input'"
+                <DInput :inputType="'text'" :inputStyle="'primary-input'"
                   v-model="formData.TelephoneNumber"
                   >ĐT cố định</DInput
                 >
 
-                <DInput
-                  :inputType="'text'"
-                  :inputStyle="'primary-input'"
+                <DInput :inputType="'text'" :inputStyle="'primary-input'"
                   :notifTooltip="'Email không đúng định dạng.'"
                   v-model="formData.Email"
                   >Email</DInput
@@ -234,23 +202,17 @@
               <!-- BANK INFO
                   ex: account, name, branch -->
               <div id="bank-info" class="rows-flexbox">
-                <DInput
-                  :inputType="'text'"
-                  :inputStyle="'primary-input'"
+                <DInput :inputType="'text'" :inputStyle="'primary-input'"
                   v-model="formData.BankAccountNumber"
                   >Tài khoản ngân hàng</DInput
                 >
 
-                <DInput
-                  :inputType="'text'"
-                  :inputStyle="'primary-input'"
+                <DInput :inputType="'text'" :inputStyle="'primary-input'"
                   v-model="formData.BankName"
                   >Tên ngân hàng</DInput
                 >
 
-                <DInput
-                  :inputType="'text'"
-                  :inputStyle="'primary-input'"
+                <DInput :inputType="'text'" :inputStyle="'primary-input'"
                   v-model="formData.BankBranchName"
                   >Chi nhánh</DInput
                 >
@@ -262,28 +224,19 @@
             <!-- ACTION GROUP WITH FORM
                   ex: add, cancel, etc. -->
             <div id="form-employee-action" class="rows-flexbox">
-              <button
-                type="button"
-                id="cancel-btn"
-                class="primary-btn second-btn"
+              <button type="button" id="cancel-btn" class="primary-btn second-btn"
                 @click="btnOnCloseForm"
               >
                 Hủy
               </button>
 
               <div class="horizontal-group-btn">
-                <button
-                  id="add-edit-btn"
-                  type="button"
-                  class="primary-btn second-btn"
+                <button id="add-edit-btn" type="button" class="primary-btn second-btn"
                   @click="btnSaveOnClick"
                 >
                   Cất
                 </button>
-                <button
-                  id="add-multi-btn"
-                  type="button"
-                  class="primary-btn"
+                <button id="add-multi-btn" type="button" class="primary-btn"
                   @click="btnSaveOnClick(true)"
                 >
                   Cất và thêm
@@ -442,7 +395,6 @@ export default {
               me.employees = res.data.Data;
               me.totalPages = res.data.TotalPage;
               me.totalRecords = res.data.TotalRecord;
-              console.log(me.totalPages, me.totalRecords);
             } else if (!res.data.Data) {
               me.employees = [];
               me.totalPages = 1;
@@ -458,59 +410,17 @@ export default {
       }
     },
 
+    // khi page number thay đổi, gọi hàm load dữ liệu
     pageNumber(newPageNumber) {
-      console.log("new page number: ", newPageNumber);
       this.employeesInPage();
     },
+    // khi page size thay đổi, gọi hàm load dữ liệu
     pageSize(newPageSize) {
-      console.log("new page size: ", newPageSize);
       this.employeesInPage();
     },
   },
 
   methods: {
-    // quay lại paginate index trước
-    backPage() {
-      if (this.pageNumber == 1) {
-        return true;
-      } else {
-        this.pageNumber -= 1;
-        return false;
-      }
-    },
-    // chuyển đến paginate index đằng sau
-    nextPage() {
-      if (this.pageNumber == this.totalPages) {
-        return true;
-      } else {
-        this.pageNumber += 1;
-        return false;
-      }
-    },
-    // hiển thị index của các trang
-    showPagination(index) {
-      let isShowPageIndex = false;
-      // nếu số trang <5 hoặc là trang cuối
-      if (
-        this.totalPages <= 5 ||
-        index + 1 == this.totalPages ||
-        (index + 1 == this.totalPages - 1 &&
-          this.pageNumber < this.totalPages - 4)
-      )
-        isShowPageIndex = true;
-      // nếu pageNumber nằm trong 5 trang cuối
-      else if (
-        this.pageNumber >= this.totalPages - 4 &&
-        index + 1 >= this.totalPages - 4
-      )
-        isShowPageIndex = true;
-      // nếu index >= pageNumber và nhỏ hơn pageNumber +4
-      else if (index + 1 >= this.pageNumber && index + 1 <= this.pageNumber + 3)
-        isShowPageIndex = true;
-
-      return isShowPageIndex;
-    },
-
     /**
      * chuẩn hóa ngày theo format
      * default: dd/mm/yyyy
@@ -535,12 +445,6 @@ export default {
         genderName = "Khác";
       }
       return genderName;
-    },
-
-    // empty table
-    emptyTable() {
-      console.log("ĐANG EMPTY TABLE...");
-      this.employees = [];
     },
 
     // gọi api load toàn bộ dữ liệu
@@ -942,9 +846,6 @@ export default {
 
   //before create, created
   created() {
-    console.log("1. content created");
-
-    // this.loadData();
     this.employeesInPage();
     this.isShowForm = false;
   },
@@ -953,9 +854,6 @@ export default {
 
   //mounted
   mounted() {
-    // console.log("3. on mounted");
-    // console.log("đây là dialog mình tạo ra: ", this.$refs.notifDialog);
-    // this.$refs.notifDialog.showDialog();
   },
 
   //   before update
@@ -963,12 +861,9 @@ export default {
 
   // updated
   updated() {
-    // console.log("5. on updated");
-    // console.log("updated: người được chọn: ", this.chosenEmployeeId);
   },
 };
 </script>
 <style lang="css">
-@import url("@/css/base/pagination.css");
 @import url("@/css/layout/content.css");
 </style>

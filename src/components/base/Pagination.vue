@@ -67,7 +67,6 @@ export default {
   methods: {
     // chọn page number
     choosePage(index) {
-      //   this.pageNumber = index + 1;
       // emit lên component cha
       this.$emit("update:pageNumber", index + 1);
     },
@@ -78,8 +77,6 @@ export default {
       if (this.pageNumber == 1) {
         return true;
       } else {
-        // this.pageNumber -= 1;
-
         // emit lên component cha
         this.$emit("update:pageNumber", this.pageNumber - 1);
 
@@ -91,10 +88,8 @@ export default {
       if (this.pageNumber == this.totalPages) {
         return true;
       } else {
-        // pageNumber += 1;
         // emit lên component cha
         this.$emit("update:pageNumber", this.pageNumber + 1);
-
         return false;
       }
     },
