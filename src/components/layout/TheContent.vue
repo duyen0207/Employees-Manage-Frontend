@@ -919,6 +919,7 @@ export default {
 
           // lấy mã nhân viên mới
           this.getNewCode();
+          this.saveAndNewMode=false;
         }
       }
     },
