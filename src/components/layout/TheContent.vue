@@ -406,7 +406,7 @@ export default {
       totalRecords: 0,
       totalPages: 0,
       pageNumber: 1,
-      pageSize: "20",
+      pageSize: "10",
 
       searchPattern: "",
       chosenEmployeeId: null,

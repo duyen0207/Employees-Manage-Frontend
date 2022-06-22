@@ -13,11 +13,11 @@
 
           <th class="position-column">CHỨC DANH</th>
           <th class="department-column">TÊN ĐƠN VỊ</th>
-          <th class="personal-id-column" title="Số chứng minh nhân dân">
+          <!-- <th class="personal-id-column" title="Số chứng minh nhân dân">
             SỐ CMND
-          </th>
-          <th class="department-column">NGÀY CẤP</th>
-          <th class="department-column">NƠI CẤP</th>
+          </th> -->
+          <!-- <th class="department-column">NGÀY CẤP</th> -->
+          <!-- <th class="department-column">NƠI CẤP</th>
           <th class="department-column">ĐỊA CHỈ</th>
 
           <th class="department-column">ĐT DI ĐỘNG</th>
@@ -26,7 +26,7 @@
 
           <th class="department-column">TÀI KHOẢN NGÂN HÀNG</th>
           <th class="department-column">TÊN NGÂN HÀNG</th>
-          <th class="department-column">CHI NHÁNH</th>
+          <th class="department-column">CHI NHÁNH</th> -->
 
           <th class="action-column">CHỨC NĂNG</th>
         </tr>
@@ -43,9 +43,9 @@
           <td class="position-column">{{ emp.EmployeePosition }}</td>
           <td class="department-column">{{ emp.DepartmentName }}</td>
 
-          <td class="personal-id-column">{{ emp.IdentityNumber }}</td>
-          <td class="position-column">{{ formatDate(emp.IdentityDate) }}</td>
-          <td class="position-column">{{ emp.IdentityPlace }}</td>
+          <!-- <td class="personal-id-column">{{ emp.IdentityNumber }}</td> -->
+          <!-- <td class="position-column">{{ formatDate(emp.IdentityDate) }}</td> -->
+          <!-- <td class="position-column">{{ emp.IdentityPlace }}</td>
           <td class="position-column">{{ emp.Address }}</td>
 
           <td class="position-column">{{ emp.PhoneNumber }}</td>
@@ -54,7 +54,7 @@
 
           <td class="position-column">{{ emp.BankAccountNumber }}</td>
           <td class="position-column">{{ emp.BankName }}</td>
-          <td class="position-column">{{ emp.BankBranchName }}</td>
+          <td class="position-column">{{ emp.BankBranchName }}</td> -->
 
           <td class="action-column">
             <button
