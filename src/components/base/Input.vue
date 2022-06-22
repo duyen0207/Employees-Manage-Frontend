@@ -9,9 +9,10 @@
     <input
       v-if="inputType != 'select' && inputType != 'radio'"
       :type="inputType"
-      :class="inputStyle"
+      :class="[inputStyle, styleWrongInput]"
       :placeholder="[placeHolder ? placeHolder : '']"
       :value="modelValue"
+      @focus="turnOffWrongNotif"
       @input="$emit('update:modelValue', $event.target.value)"
     />
 
@@ -26,7 +27,8 @@
           :name="radioName"
           type="radio"
           :value="option.value"
-          :checked="modelValue==option.value"
+          :checked="modelValue == option.value"
+          @focus="turnOffWrongNotif"
           @change="$emit('update:modelValue', $event.target.value)"
         />
         <label for="">{{ option.label }}</label>
@@ -36,8 +38,9 @@
     <!-- input dạng select -->
     <select
       v-if="inputType == 'select'"
-      :class="inputStyle"
+      :class="[inputStyle, styleWrongInput]"
       :value="modelValue"
+      @focus="turnOffWrongNotif"
       @input="$emit('update:modelValue', $event.target.value)"
     >
       <option
@@ -50,16 +53,24 @@
     </select>
 
     <div class="tool-tip-container">
-      <div class="wrong-notif-tooltip">
-        {{ notifTooltip ? notifTooltip : "Mã nhân viên không được để trống" }}
+      <div
+        v-show="showWrongNotif"
+        v-if="notifTooltip ? true : false"
+        class="wrong-notif-tooltip"
+      >
+        {{ notifTooltip ? notifTooltip : "" }}
       </div>
     </div>
   </div>
-
-  <!-- input dạng bộ các radio -->
 </template>
 <script>
 export default {
+  data() {
+    return {
+      showWrongNotif: false,
+      styleWrongInput: "",
+    };
+  },
   props: {
     inputType: String,
     inputStyle: String,
@@ -73,6 +84,18 @@ export default {
 
     optionGroups: Array,
     radioName: String,
+  },
+
+  methods: {
+    turnOffWrongNotif() {
+      this.showWrongNotif = false;
+      this.styleWrongInput = "";
+      this.$emit("inputFocus");
+    },
+    turnOnWrongNotif() {
+      this.showWrongNotif = true;
+      this.styleWrongInput = "wrong-input";
+    },
   },
 };
 </script>

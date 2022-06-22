@@ -59,8 +59,12 @@
 
     <!-- Form -->
     <div id="form-container">
-      <div v-show="isShowForm" class="modal">
-        <form action="" method="post" id="employee-form" class="modal-content animate"
+      <div v-if="isShowForm" class="modal">
+        <form
+          action=""
+          method="post"
+          id="employee-form"
+          class="modal-content animate"
         >
           <div id="new-employee-container">
             <!-- Form title ------------------------>
@@ -82,7 +86,10 @@
                     icon="fa-regular fa-circle-question"
                   ></font-awesome-icon>
                 </button>
-                <button type="button" id="close-btn" class="icon"
+                <button
+                  type="button"
+                  id="close-btn"
+                  class="icon"
                   @click="btnOnCloseForm"
                 >
                   <font-awesome-icon icon="fa-solid fa-xmark" />
@@ -99,30 +106,50 @@
                       -->
                 <div class="" id="employee-info">
                   <div class="rows-flexbox">
-                    <DInput :inputType="'text'" :inputStyle="'primary-input'" 
+                    <DInput
+                      ref="empCodeInput"
+                      :inputType="'text'"
+                      :inputStyle="'primary-input'"
                       :wrapperStyle="'div-w-40'"
-                      :placeHolder="'NV-001'" required
+                      :placeHolder="'NV-001'"
+                      required
+                      :notifTooltip="'Mã nhân viên không được để trống.'"
                       v-model="formData.EmployeeCode"
                       >Mã</DInput
                     >
 
-                    <DInput :inputType="'text'" :inputStyle="'primary-input'"
-                      :wrapperStyle="'div-w-60'" :placeHolder="'Nguyễn Văn A'"
+                    <DInput
+                      ref="empNameInput"
+                      :inputType="'text'"
+                      :inputStyle="'primary-input'"
+                      :wrapperStyle="'div-w-60'"
+                      :placeHolder="'Nguyễn Văn A'"
                       :notifTooltip="'Tên không được để trống.'"
                       required
+                      @inputFocus="validateEmployeeCode"
                       v-model="formData.EmployeeName"
                       >Tên</DInput
                     >
                   </div>
 
-                  <DInput :inputType="'select'" :inputStyle="'primary-input'"
-                    :optionGroups="optionGroups" required
+                  <DInput
+                    ref="empDepartmentInput"
+                    :inputType="'select'"
+                    :inputStyle="'primary-input'"
+                    :optionGroups="optionGroups"
+                    required
+                    :notifTooltip="'Đơn vị không được để trống.'"
+                    @inputFocus="validateCodeName"
                     v-model="formData.DepartmentId"
                     >Đơn vị</DInput
                   >
 
-                  <DInput :inputType="'text'" :inputStyle="'primary-input'"
+                  <DInput
+                    ref="empPositionInput"
+                    :inputType="'text'"
+                    :inputStyle="'primary-input'"
                     :placeHolder="'Nhân viên'"
+                    @inputFocus="validateCodeNameDepartment"
                     v-model="formData.EmployeePosition"
                     >Chức danh</DInput
                   >
@@ -133,41 +160,68 @@
                       -->
                 <div class="" id="personal-info">
                   <div class="rows-flexbox">
-                    <DInput :inputType="'date'" :inputStyle="'primary-input'"
-                      :wrapperStyle="'div-w-40'" :notifTooltip="'Ngày sinh không hợp lệ.'"
+                    <DInput
+                      ref="empBirthInput"
+                      :inputType="'date'"
+                      :inputStyle="'primary-input'"
+                      :wrapperStyle="'div-w-40'"
+                      :notifTooltip="'Ngày sinh không hợp lệ.'"
+                      @inputFocus="validateCodeNameDepartment"
                       v-model="formData.DateOfBirth"
                       >Ngày sinh</DInput
                     >
 
-                    <DInput :inputType="'radio'" :inputStyle="'primary-input'"
-                      :optionGroups="radioGroups" :radioName="'gender'"
+                    <DInput
+                      ref="empGenderInput"
+                      :inputType="'radio'"
+                      :inputStyle="'primary-input'"
+                      :optionGroups="radioGroups"
+                      :radioName="'gender'"
+                      @inputFocus="validateCodeNameDepartment"
                       v-model="formData.Gender"
                       >Giới tính</DInput
                     >
                   </div>
 
                   <div class="rows-flexbox">
-                    <DInput :inputType="'text'" :inputStyle="'primary-input'"
+                    <DInput
+                      ref="empIdNumberInput"
+                      :inputType="'text'"
+                      :inputStyle="'primary-input'"
                       :wrapperStyle="'div-w-60'"
+                      @inputFocus="validateCodeNameDepartment"
                       v-model="formData.IdentityNumber"
                       >Số CMND</DInput
                     >
 
-                    <DInput :inputType="'date'" :inputStyle="'primary-input'"
-                      :wrapperStyle="'div-w-40'" :notifTooltip="'Ngày cấp không hợp lệ.'"
+                    <DInput
+                      ref="empIdDateInput"
+                      :inputType="'date'"
+                      :inputStyle="'primary-input'"
+                      :wrapperStyle="'div-w-40'"
+                      :notifTooltip="'Ngày cấp không hợp lệ.'"
+                      @inputFocus="validateCodeNameDepartment"
                       v-model="formData.IdentityDate"
                       >Ngày cấp</DInput
                     >
                   </div>
 
-                  <DInput :inputType="'text'" :inputStyle="'primary-input'"
+                  <DInput
+                    ref="empIdPlaceInput"
+                    :inputType="'text'"
+                    :inputStyle="'primary-input'"
+                    @inputFocus="validateCodeNameDepartment"
                     v-model="formData.IdentityPlace"
                     >Nơi cấp</DInput
                   >
                 </div>
               </div>
               <!-- ADDRESS -->
-              <DInput :inputType="'text'" :inputStyle="'primary-input'"
+              <DInput
+                ref="empAddressInput"
+                :inputType="'text'"
+                :inputStyle="'primary-input'"
+                @inputFocus="validateCodeNameDepartment"
                 v-model="formData.Address"
                 >Địa chỉ</DInput
               >
@@ -175,17 +229,29 @@
               <!-- CONTACT INFO
                   ex: phone number, email -->
               <div id="contact" class="rows-flexbox">
-                <DInput :inputType="'text'" :inputStyle="'primary-input'"
+                <DInput
+                  ref="empPhoneInput"
+                  :inputType="'text'"
+                  :inputStyle="'primary-input'"
+                  @inputFocus="validateCodeNameDepartment"
                   v-model="formData.PhoneNumber"
                   >ĐT di động</DInput
                 >
 
-                <DInput :inputType="'text'" :inputStyle="'primary-input'"
+                <DInput
+                  ref="empTelephoneInput"
+                  :inputType="'text'"
+                  :inputStyle="'primary-input'"
+                  @inputFocus="validateCodeNameDepartment"
                   v-model="formData.TelephoneNumber"
                   >ĐT cố định</DInput
                 >
 
-                <DInput :inputType="'text'" :inputStyle="'primary-input'"
+                <DInput
+                  ref="empEmailInput"
+                  :inputType="'text'"
+                  :inputStyle="'primary-input'"
+                  @inputFocus="validateCodeNameDepartment"
                   :notifTooltip="'Email không đúng định dạng.'"
                   v-model="formData.Email"
                   >Email</DInput
@@ -195,17 +261,29 @@
               <!-- BANK INFO
                   ex: account, name, branch -->
               <div id="bank-info" class="rows-flexbox">
-                <DInput :inputType="'text'" :inputStyle="'primary-input'"
+                <DInput
+                  ref="empBankAccountInput"
+                  :inputType="'text'"
+                  :inputStyle="'primary-input'"
+                  @inputFocus="validateCodeNameDepartment"
                   v-model="formData.BankAccountNumber"
                   >Tài khoản ngân hàng</DInput
                 >
 
-                <DInput :inputType="'text'" :inputStyle="'primary-input'"
+                <DInput
+                  ref="empBankNameInput"
+                  :inputType="'text'"
+                  :inputStyle="'primary-input'"
+                  @inputFocus="validateCodeNameDepartment"
                   v-model="formData.BankName"
                   >Tên ngân hàng</DInput
                 >
 
-                <DInput :inputType="'text'" :inputStyle="'primary-input'"
+                <DInput
+                  ref="empBankBranchInput"
+                  :inputType="'text'"
+                  :inputStyle="'primary-input'"
+                  @inputFocus="validateCodeNameDepartment"
                   v-model="formData.BankBranchName"
                   >Chi nhánh</DInput
                 >
@@ -217,19 +295,28 @@
             <!-- ACTION GROUP WITH FORM
                   ex: add, cancel, etc. -->
             <div id="form-employee-action" class="rows-flexbox">
-              <button type="button" id="cancel-btn" class="primary-btn second-btn"
+              <button
+                type="button"
+                id="cancel-btn"
+                class="primary-btn second-btn"
                 @click="btnOnCloseForm"
               >
                 Hủy
               </button>
 
               <div class="horizontal-group-btn">
-                <button id="add-edit-btn" type="button" class="primary-btn second-btn"
+                <button
+                  id="add-edit-btn"
+                  type="button"
+                  class="primary-btn second-btn"
                   @click="btnSaveOnClick"
                 >
                   Cất
                 </button>
-                <button id="add-multi-btn" type="button" class="primary-btn"
+                <button
+                  id="add-multi-btn"
+                  type="button"
+                  class="primary-btn"
                   @click="btnSaveOnClick(true)"
                 >
                   Cất và thêm
@@ -348,7 +435,7 @@ export default {
 
       apiMethod: "post",
       formData: {
-        EmployeeCode: "Hello",
+        EmployeeCode: "",
         EmployeeName: "Tên",
         DepartmentId: "142cb08f-7c31-21fa-8e90-67245e8b283e",
         DepartmentName: "tên đơn vị",
@@ -374,42 +461,20 @@ export default {
   },
   watch: {
     // TÌM KIẾM
-    searchPattern(newSearchPattern) {
-      try {
-        console.log("Searching...", newSearchPattern);
-        let searchURL = `${SERVER_API_URL}/filter?pageSize=${this.pageSize}&pageNumber=${this.pageNumber}&employeeFilter=${this.searchPattern}`;
-
-        var me = this;
-        // gọi api search
-        axios
-          .get(searchURL)
-          .then(function (res) {
-            if (res.data.Data) {
-              me.employees = res.data.Data;
-              me.totalPages = res.data.TotalPage;
-              me.totalRecords = res.data.TotalRecord;
-            } else if (!res.data.Data) {
-              me.employees = [];
-              me.totalPages = 1;
-              me.totalRecords = 0;
-            }
-            console.log("search result: ", me.employees);
-          })
-          .catch(function (res) {
-            console.log(res);
-          });
-      } catch (error) {
-        console.log("lỗi khi search: ", error);
-      }
+    searchPattern() {
+      this.pageNumber=1;
+      this.searchEmployee();
     },
 
     // khi page number thay đổi, gọi hàm load dữ liệu
-    pageNumber(newPageNumber) {
-      this.employeesInPage();
+    pageNumber(newPageNumber) { 
+      if(this.searchPattern) this.searchEmployee();
+      else this.employeesInPage();
     },
     // khi page size thay đổi, gọi hàm load dữ liệu
-    pageSize(newPageSize) {
-      this.employeesInPage();
+    pageSize() {
+      if(this.searchPattern) this.searchEmployee();
+      else this.employeesInPage();
     },
   },
 
@@ -438,6 +503,36 @@ export default {
         genderName = "Khác";
       }
       return genderName;
+    },
+
+    // tìm kiếm
+    searchEmployee() {
+      try {
+        // console.log("Searching...", newSearchPattern);
+        let searchURL = `${SERVER_API_URL}/filter?pageSize=${this.pageSize}&pageNumber=${this.pageNumber}&employeeFilter=${this.searchPattern}`;
+
+        var me = this;
+        // gọi api search
+        axios
+          .get(searchURL)
+          .then(function (res) {
+            if (res.data.Data) {
+              me.employees = res.data.Data;
+              me.totalPages = res.data.TotalPage;
+              me.totalRecords = res.data.TotalRecord;
+            } else if (!res.data.Data) {
+              me.employees = [];
+              me.totalPages = 1;
+              me.totalRecords = 0;
+            }
+            console.log("search result: ", me.employees);
+          })
+          .catch(function (res) {
+            console.log(res);
+          });
+      } catch (error) {
+        console.log("lỗi khi search: ", error);
+      }
     },
 
     // gọi api load toàn bộ dữ liệu
@@ -656,6 +751,36 @@ export default {
       };
     },
 
+    // validate ngay trên form-----------------------------
+    // kiểm tra nếu mã để trống
+    validateEmployeeCode() {
+      if (!this.formData.EmployeeCode) {
+        this.$refs.empCodeInput.turnOnWrongNotif();
+      }
+    },
+    // kiểm tra nếu mã và tên để trống
+    validateCodeName() {
+      this.validateEmployeeCode();
+      if (!this.formData.EmployeeName) {
+        this.$refs.empNameInput.turnOnWrongNotif();
+      }
+    },
+    // kiểm tra nếu mã, tên, và đơn vị để trống
+    validateCodeNameDepartment() {
+      this.validateCodeName();
+      if (!this.formData.DepartmentId) {
+        this.$refs.empDepartmentInput.turnOnWrongNotif();
+      }
+    },
+
+    // xóa toàn bộ thông báo validate
+    resetValidateNow() {
+      this.$refs.empCodeInput.turnOffWrongNotif();
+      this.$refs.empNameInput.turnOffWrongNotif();
+      this.$refs.empDepartmentInput.turnOffWrongNotif();
+    },
+
+    // -----------------------------------------------------
     //  hiển thị form sửa hoặc thêm mới
     btnShowForm(employeeId = null) {
       if (!employeeId) {
@@ -676,6 +801,7 @@ export default {
       this.saveAndNewMode = false;
       this.resetForm();
       this.resetChosenEmployeeId();
+      this.resetValidateNow();
     },
 
     /**
@@ -846,15 +972,13 @@ export default {
   beforeMount() {},
 
   //mounted
-  mounted() {
-  },
+  mounted() {},
 
   //   before update
   beforeUpdate() {},
 
   // updated
-  updated() {
-  },
+  updated() {},
 };
 </script>
 <style lang="css">

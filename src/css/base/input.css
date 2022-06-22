@@ -75,7 +75,7 @@
 }
 
 .wrong-notif-tooltip {
-  visibility: hidden;
+  /* visibility: hidden; */
   /* display: none; */
 
   position: absolute;

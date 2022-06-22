@@ -7,6 +7,7 @@
       name="paging"
       id="records-num-pagination"
     >
+      <option value="10">10 bản ghi trên 1 trang</option>
       <option value="20">20 bản ghi trên 1 trang</option>
       <option value="30">30 bản ghi trên 1 trang</option>
       <option value="50">50 bản ghi trên 1 trang</option>
