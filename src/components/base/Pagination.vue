@@ -59,6 +59,7 @@ export default {
   },
 
   watch: {
+    // phát hiện sự thay đổi của page size
     pageSize(newPageSize) {
       console.log("from child component: ", newPageSize);
       this.$emit("update:pageNumber", 1);

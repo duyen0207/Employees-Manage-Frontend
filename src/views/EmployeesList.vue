@@ -1,14 +1,13 @@
 <template lang="">
-    <div>
-      <div class="rows-flexbox">
-        <TheNavbar/>
-        <div class="main">
-            <TheHeader/>
-            <TheContent/>
-        </div>
+  <div>
+    <div class="rows-flexbox">
+      <TheNavbar />
+      <div class="main">
+        <TheHeader />
+        <TheContent />
       </div>
-
     </div>
+  </div>
 </template>
 <script>
 import axios from "axios";
@@ -17,15 +16,12 @@ import TheContent from "@/components/layout/TheContent.vue";
 import TheHeader from "@/components/layout/TheHeader.vue";
 import TheNavbar from "@/components/layout/TheNavbar.vue";
 
-import AppButton from "@/components/base/Button.vue";
-
 export default {
   name: "EmployeesList",
   components: {
     TheNavbar,
     TheHeader,
     TheContent,
-    AppButton,
   },
 
   data() {
@@ -70,5 +66,4 @@ export default {
   },
 };
 </script>
-<style>
-</style>
+<style></style>

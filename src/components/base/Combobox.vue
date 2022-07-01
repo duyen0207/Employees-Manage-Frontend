@@ -15,9 +15,6 @@
   </span>
 </template>
 <script>
-import axios from "axios";
-
-const SERVER_API_URL = "https://amis.manhnv.net/api/v1/Employees";
 
 export default {
   name: "DCombobox",
@@ -43,8 +40,6 @@ export default {
       if (this.isShowCombobox == false) this.isShowCombobox = true;
       else this.isShowCombobox = false;
     },
-
-    
   },
 };
 </script>

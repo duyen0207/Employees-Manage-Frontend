@@ -87,11 +87,13 @@ export default {
   },
 
   methods: {
+    // tắt thông báo lỗi
     turnOffWrongNotif() {
       this.showWrongNotif = false;
       this.styleWrongInput = "";
       this.$emit("inputFocus");
     },
+    // bật thông báo lỗi
     turnOnWrongNotif() {
       this.showWrongNotif = true;
       this.styleWrongInput = "wrong-input";

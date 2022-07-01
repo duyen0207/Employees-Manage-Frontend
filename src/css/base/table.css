@@ -8,8 +8,13 @@
   overflow: auto;
 }
 
-#data-table-container tbody {
+#data-table-container {
   height: 400px;
+}
+
+.fixed-column-container {
+  position: sticky;
+  right: 0;
 }
 
 .table-footer {

@@ -138,11 +138,6 @@
 <script>
 export default {
     name:"TheNavbar",
-    // data () {
-    //     return {
-    //         logoUrl: "@/assets/images/favicon.ico" ,
-    //     }
-    // }
 };
 </script>
 <style>
