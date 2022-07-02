@@ -84,16 +84,16 @@ hr.divider {
 
 /* Modal: confirm, delete, edit----------------------------------- */
 .notif-window {
-  height: 204px;
   width: 424px;
   padding: 0 20px;
+  border-radius: 4px;
 }
 .notif-text {
-  font-size: 15px;
+  font-size: 13px;
 }
 
 .notif-msg {
-  padding: 20px 20px 15px;
+  padding: 22px 20px 20px;
   justify-content: flex-start;
 }
 

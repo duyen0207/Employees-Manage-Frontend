@@ -18,8 +18,6 @@
   font-size: 15px;
 }
 .nav-icon {
-  width: 16px;
-  height: 16px;
   margin-right: 8px;
 
   font-size: 20px;
@@ -32,7 +30,7 @@
   height: 46px;
 }
 
-.navbar-header #grid-icon {
+.navbar-header .grid-icon {
   margin-left: 28px;
   margin-right: 5px;
 }

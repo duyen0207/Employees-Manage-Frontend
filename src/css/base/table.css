@@ -1,7 +1,8 @@
 /* normal data table */
 #data-table-container {
+
   height: 400px;
-  width: 960px;
+  max-width: 960px;
 
   border-bottom: 1px solid gray;
 
@@ -12,9 +13,12 @@
   height: 400px;
 }
 
-.fixed-column-container {
+.data-table .data-row .fixed-column-container,
+.data-table .header-table .fixed-column-container {
   position: sticky;
   right: 0;
+
+  border-left: dotted 1px gray;
 }
 
 .table-footer {
@@ -30,7 +34,7 @@
 
 .data-table {
   --table-row-color: #e5e8ec;
-  --table-row-hover: #eceef1;
+  --table-row-hover: #f2f4f6;
 
   width: 100%;
   border-collapse: separate;
@@ -38,16 +42,22 @@
   padding: 0;
 }
 
+.data-table tbody {
+  position: relative;
+}
+
 /* table row--------------------- */
-.data-table tr {
+.data-table tr,
+.data-table td,
+.data-table th {
   height: 42px;
 }
 /* table column------------------ */
 .data-table td,
 .data-table th {
   padding: 0 4px;
-  border: 1px solid #ddd;
-  border-style: solid dotted;
+  border: 1px #c7c7c7;
+  border-style: solid solid solid none;
   min-width: 120px;
   max-width: 200px;
 }
@@ -66,6 +76,8 @@
 /* table data rows--------------- */
 .data-table .data-row td {
   cursor: pointer;
+  border-style: none dotted solid none;
+
   /* background-color: gray; */
 }
 
@@ -74,20 +86,24 @@
 }
 
 /* Specific column---------------- */
-.data-table td.fullname-column, .data-table th.fullname-column{
+.data-table td.fullname-column,
+.data-table th.fullname-column {
   min-width: 200px;
 }
 
 .data-table .checkbox-column {
+  position: sticky;
+  left: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   width: 30px;
   min-width: 42px;
   padding: 0 4px;
 
-  position: sticky;
-  left: 0;
-
   background-color: white;
-
   text-align: center;
 }
 
@@ -115,8 +131,6 @@
   width: 82px;
   text-align: center;
 }
-
-
 
 .data-row:hover > .action-column button {
   background-color: var(--table-row-hover);

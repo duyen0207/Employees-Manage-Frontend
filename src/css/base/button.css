@@ -10,9 +10,10 @@
 
 /* action button: add, delete, fix, reload */
 .edit-employee-btn {
-  /* background-color: skyblue; */
-  /* z-index: 50; */
+  margin-right: 6px;
+  font-weight: 600;
 }
+
 .edit-employee-btn:hover {
   background-color: skyblue;
   color: green;

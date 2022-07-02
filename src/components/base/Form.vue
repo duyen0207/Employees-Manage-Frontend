@@ -274,15 +274,12 @@
 // import các thư viện
 import axios from "axios";
 
+// import base function
+import * as BaseFunction from "@/js/base.js";
+
+// import component
 import DInput from "@/components/base/Input.vue";
 
-const SERVER_API_URL = "https://amis.manhnv.net/api/v1/Employees";
-
-let employeeAPI = {
-  getEmployees: `${SERVER_API_URL}/filter`,
-  addNewEmployees: `${SERVER_API_URL}`,
-  getNewCode: `${SERVER_API_URL}/NewEmployeeCode`,
-};
 export default {
   components: {
     DInput,
@@ -352,6 +349,12 @@ export default {
     };
   },
 
+  watch: {
+    formData(){
+      console.log("form thay đổi: ",this.formData.DateOfBirth);
+    }
+  },
+
   methods: {
     /**
      * chuẩn hóa ngày theo format
@@ -380,7 +383,7 @@ export default {
     getEmployeeInfo(employeeId) {
       try {
         var me = this;
-        const getInforURL = `${SERVER_API_URL}/${employeeId}`;
+        const getInforURL = `${BaseFunction.SERVER_API_URL}/${employeeId}`;
         // gọi api
         axios
           .get(getInforURL)
@@ -413,7 +416,7 @@ export default {
         var me = this;
         // gọi api để lấy mã nhân viên mới
         axios
-          .get(employeeAPI.getNewCode)
+          .get(BaseFunction.employeeAPI.getNewCode)
           .then(function (res) {
             return res.data;
           })

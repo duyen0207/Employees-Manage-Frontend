@@ -1,6 +1,5 @@
 /* This file css for label and input */
 
-
 .input-disabled {
   background-color: rgb(216, 248, 216);
   color: rgb(107, 105, 105);
@@ -93,4 +92,61 @@
 
   font-size: 12px;
   text-align: center;
+}
+
+/* checkbox----------------------------- */
+.custom-checkbox-container {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 18px;
+  height: 18px;
+
+  cursor: pointer;
+}
+
+.custom-checkbox-checkmark {
+  width: 18px;
+  height: 18px;
+
+  border-radius: 2px;
+  border: solid 1px gray;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+  transform: rotate(-90deg);
+}
+.custom-checkbox-checkmark::after {
+  content: "";
+
+  position: absolute;
+  left: 5px;
+  top: 1px;
+
+  display: none;
+  width: 4px;
+  height: 9px;
+  border: solid green;
+  border-width: 0 2px 2px 0;
+
+  transform: rotate(45deg);
+}
+
+.input-check-item,
+.input-check-all {
+  width: 0;
+  cursor: pointer;
+}
+
+.input-check-item:checked + .custom-checkbox-checkmark,
+.input-check-all:checked + .custom-checkbox-checkmark {
+  border: 1px solid #2ca01c;
+  transform: rotate(0deg);
+}
+.input-check-item:checked + .custom-checkbox-checkmark::after,
+.input-check-all:checked + .custom-checkbox-checkmark::after {
+  display: block;
 }

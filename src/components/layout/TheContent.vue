@@ -71,6 +71,9 @@
 // import các thư viện
 import axios from "axios";
 
+// import base function and variable
+import * as BaseFunction from "@/js/base.js";
+
 // import các components
 import DCombobox from "@/components/base/Combobox.vue";
 import DDialog from "@/components/base/Dialog.vue";
@@ -79,21 +82,6 @@ import DTable from "@/components/base/Table.vue";
 import DPagination from "@/components/base/Pagination.vue";
 import DForm from "@/components/base/Form.vue";
 
-const SERVER_API_URL = "https://amis.manhnv.net/api/v1/Employees";
-
-let employeeAPI = {
-  getEmployees: `${SERVER_API_URL}/filter`,
-  addNewEmployees: `${SERVER_API_URL}`,
-  getNewCode: `${SERVER_API_URL}/NewEmployeeCode`,
-};
-
-const Action = {
-  VALIDATE: 0,
-  ADD: 1,
-  EDIT: 2,
-  DELETE: 3,
-  GET_INFO: 4,
-};
 
 export default {
   name: "TheContent",
@@ -194,7 +182,7 @@ export default {
     searchEmployee() {
       try {
         // console.log("Searching...", newSearchPattern);
-        let searchURL = `${SERVER_API_URL}/filter?pageSize=${this.pageSize}&pageNumber=${this.pageNumber}&employeeFilter=${this.searchPattern}`;
+        let searchURL = `${BaseFunction.SERVER_API_URL}/filter?pageSize=${this.pageSize}&pageNumber=${this.pageNumber}&employeeFilter=${this.searchPattern}`;
 
         var me = this;
         // gọi api search
@@ -227,7 +215,7 @@ export default {
         var me = this;
         // gọi api để load dữ liệu lên bảng
         axios
-          .get(employeeAPI.getEmployees)
+          .get(BaseFunction.employeeAPI.getEmployees)
           .then(function (res) {
             me.employees = res.data.Data;
             console.log("this is data: ", me.employees);
@@ -244,7 +232,7 @@ export default {
     // load danh sách nv theo trang
     employeesInPage() {
       try {
-        let paginateURL = `${SERVER_API_URL}/filter?pageSize=${this.pageSize}&pageNumber=${this.pageNumber}`;
+        let paginateURL = `${BaseFunction.SERVER_API_URL}/filter?pageSize=${this.pageSize}&pageNumber=${this.pageNumber}`;
 
         var me = this;
         // gọi api search
@@ -412,16 +400,16 @@ export default {
      * type = 2: confirm save dialog
      * type = 3: confirm delete dialog
      */
-    btnShowDialog(type = "0", employeeCode = null, employeeId = null) {
+    btnShowDialog(type = "0", emp) {
       // chọn loại dialog
       this.dialogType = type;
       // thêm lời nhắn
       // confirm if delete
       if (type == "3") {
         this.dialogMsg = [
-          `Bạn có chắc chắc muốn xóa nhân viên có mã <${employeeCode}> không?`,
+          `Bạn có chắc chắc muốn xóa nhân viên có mã <${emp.EmployeeCode}> không?`,
         ];
-        this.setChosenEmpId(employeeId);
+        this.setChosenEmpId(emp.EmployeeId);
       }
       // confirm if save
       else if (type == "2") {
@@ -445,11 +433,11 @@ export default {
       employee.GenderName = this.setGenderName(employee.Gender);
 
       var me = this;
-      let requestURL = `${SERVER_API_URL}`;
+      let requestURL = `${BaseFunction.SERVER_API_URL}`;
 
       // nếu đang ở trạng thái sửa
       if (this.chosenEmployeeId) {
-        requestURL = `${SERVER_API_URL}/${this.chosenEmployeeId}`;
+        requestURL = `${BaseFunction.SERVER_API_URL}/${this.chosenEmployeeId}`;
       }
 
       axios({
@@ -544,7 +532,7 @@ export default {
       if (this.chosenEmployeeId) {
         try {
           var me = this;
-          const deleteURL = `${SERVER_API_URL}/${this.chosenEmployeeId}`;
+          const deleteURL = `${BaseFunction.SERVER_API_URL}/${this.chosenEmployeeId}`;
           // gọi api
           axios
             .delete(deleteURL)

@@ -1,9 +1,11 @@
 <template lang="">
   <span class="action-combobox">
-    <button class="select-selected border-icon-combobox" @click="showCombobox">
+    <!-- <button class="select-selected border-icon-combobox" @click="showCombobox">
       <font-awesome-icon icon="fa-solid fa-caret-down"></font-awesome-icon>
-    </button>
-    <ul class="select-items" v-show="isShowCombobox">
+    </button> -->
+    <ul class="select-items" v-show="isShowCombobox"
+      :style="{top: `${positionTop}px`, left: `${positionLeft}px`}"
+    >
       <li
         v-for="(option, index) in selectOptions"
         :key="index"
@@ -24,11 +26,11 @@ export default {
     };
   },
   props: {
-    emp: {
-      EmployeeId: "",
-    },
     isShowForm: false,
     employees: [],
+
+    positionTop: 0,
+    positionLeft: 0,
     // truyền từ prop danh sách các lựa chọn, mỗi lựa chọn
     // ở dạng object với các key là {label, clickEvent}
     selectOptions: Array,
