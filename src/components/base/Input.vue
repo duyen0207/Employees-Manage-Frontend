@@ -23,15 +23,19 @@
         v-for="(option, index) in optionGroups"
         :key="index"
       >
-        <input
-          :name="radioName"
-          type="radio"
-          :value="option.value"
-          :checked="modelValue == option.value"
-          @focus="turnOffWrongNotif"
-          @change="$emit('update:modelValue', $event.target.value)"
-        />
-        <label for="">{{ option.label }}</label>
+        <label class="custom-radio-container">
+          <input
+            :name="radioName"
+            class="custom-radio-input"
+            type="radio"
+            :value="option.value"
+            :checked="modelValue == option.value"
+            @focus="turnOffWrongNotif"
+            @change="$emit('update:modelValue', $event.target.value)"
+          />
+          {{ option.label }}
+          <span class="custom-radio-checkmark"><span></span></span>
+        </label>
       </div>
     </div>
 
@@ -44,6 +48,7 @@
       @input="$emit('update:modelValue', $event.target.value)"
     >
       <option
+        class="custom-select-option"
         v-for="(option, index) in optionGroups"
         :key="index"
         :value="option.value"

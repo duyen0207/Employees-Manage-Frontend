@@ -69,7 +69,7 @@
                     :notifTooltip="'Tên không được để trống.'"
                     required
                     @inputFocus="validateEmployeeCode"
-                    v-model="formData.EmployeeName"
+                    v-model="formData.FullName"
                     >Tên</DInput
                   >
                 </div>
@@ -92,7 +92,7 @@
                   :inputStyle="'primary-input'"
                   :placeHolder="'Nhân viên'"
                   @inputFocus="validateCodeNameDepartment"
-                  v-model="formData.EmployeePosition"
+                  v-model="formData.PositionName"
                   >Chức danh</DInput
                 >
               </div>
@@ -153,7 +153,7 @@
                   :inputType="'text'"
                   :inputStyle="'primary-input'"
                   @inputFocus="validateCodeNameDepartment"
-                  v-model="formData.IdentityPlace"
+                  v-model="formData.IdentityBy"
                   >Nơi cấp</DInput
                 >
               </div>
@@ -310,32 +310,32 @@ export default {
 
       radioGroups: [
         {
-          value: "1",
+          value: "0",
           label: "Nam",
         },
         {
-          value: "2",
+          value: "1",
           label: "Nữ",
         },
         {
-          value: "3",
+          value: "2",
           label: "Khác",
         },
       ],
 
       formData: {
         EmployeeCode: "",
-        EmployeeName: "",
+        FullName: "",
         DepartmentId: "142cb08f-7c31-21fa-8e90-67245e8b283e",
         DepartmentName: "",
-        EmployeePosition: "Nhân Viên",
+        PositionName: "Nhân Viên",
 
         DateOfBirth: null,
         Gender: "1",
         GenderName: "",
         IdentityNumber: "823923",
         IdentityDate: null,
-        IdentityPlace: "Hà Nội",
+        IdentityBy: "Hà Nội",
         Address: "Hà Nội",
 
         PhoneNumber: "804895",
@@ -443,7 +443,7 @@ export default {
     // kiểm tra nếu mã và tên để trống
     validateCodeName() {
       this.validateEmployeeCode();
-      if (!this.formData.EmployeeName) {
+      if (!this.formData.FullName) {
         this.$refs.empNameInput.turnOnWrongNotif();
       }
     },

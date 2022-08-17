@@ -5,7 +5,11 @@
         <tr>
           <th class="checkbox-column">
             <label class="custom-checkbox-container">
-              <input type="checkbox" class="input-check-all" />
+              <input
+                type="checkbox"
+                class="input-check-all"
+                v-model="selectAll"
+              />
               <span class="custom-checkbox-checkmark"></span>
             </label>
           </th>
@@ -36,28 +40,33 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="emp in employees" :key="emp.EmployeeId" class="data-row">
-          <td :id="emp.EmployeeId" class="checkbox-column">
+        <tr v-for="emp in employees" :key="emp.EmployeeId" :id="emp.EmployeeId" class="data-row">
+          <td class="checkbox-column">
             <label class="custom-checkbox-container">
-              <input type="checkbox" class="input-check-item" />
+              <input
+                type="checkbox"
+                class="input-check-item"
+                :value="emp.EmployeeId"
+                v-model="checkedEmployee"
+              />
               <span class="custom-checkbox-checkmark"></span>
             </label>
           </td>
           <td class="employee-code-column">{{ emp.EmployeeCode }}</td>
-          <td class="fullname-column">{{ emp.EmployeeName }}</td>
+          <td class="fullname-column">{{ emp.FullName }}</td>
           <td class="sex-column">{{ setGenderName(emp.Gender) }}</td>
           <td class="dob-column">{{ formatDate(emp.DateOfBirth) }}</td>
-          <td class="position-column">{{ emp.EmployeePosition }}</td>
+          <td class="position-column">{{ emp.PositionName }}</td>
           <td class="department-column">{{ emp.DepartmentName }}</td>
 
           <td class="personal-id-column">{{ emp.IdentityNumber }}</td>
           <td class="position-column">{{ formatDate(emp.IdentityDate) }}</td>
-          <td class="position-column">{{ emp.IdentityPlace }}</td>
-          <td class="position-column">{{ emp.Address }}</td>
+          <td class="position-column">{{ emp.IdentityBy }}</td>
+          <td class="address-column">{{ emp.Address }}</td>
 
           <td class="position-column">{{ emp.PhoneNumber }}</td>
           <td class="position-column">{{ emp.TelephoneNumber }}</td>
-          <td class="position-column">{{ emp.Email }}</td>
+          <td class="">{{ emp.Email }}</td>
 
           <td class="position-column">{{ emp.BankAccountNumber }}</td>
           <td class="position-column">{{ emp.BankName }}</td>
@@ -110,6 +119,7 @@ export default {
   data() {
     return {
       selectedRow: null,
+      checkedEmployee: [],
 
       dropdownTop: 0,
       dropdownLeft: 0,
@@ -132,33 +142,52 @@ export default {
     };
   },
 
+  watch: {
+    checkedEmployee(){
+      this.$emit("checkRow", this.checkedEmployee);
+      console.log("đã chọn xong một hàng nè");
+    }
+  },
+  computed: {
+    // chọn tất cả nhân viên
+    selectAll: {
+      get: function () {
+        return this.employees
+          ? this.checkedEmployee.length == this.employees.length
+          : false;
+      },
+      set: function (value) {
+        var selected = [];
+
+        if (value) {
+          this.employees.forEach(function (emp) {
+            selected.push(emp.EmployeeId);
+          });
+        }
+
+        this.checkedEmployee = selected;
+      },
+    },
+  },
   methods: {
     // ktra giới tính
     setGenderName(gender) {
-      let genderName = "";
-      if (gender == "1") {
-        genderName = "Nam";
-      } else if (gender == "2") {
-        genderName = "Nữ";
-      } else if (gender == "3") {
-        genderName = "Khác";
-      }
-      return genderName;
+      return BaseFunction.setGenderName(gender);
     },
 
-    /**
-     * chuẩn hóa ngày theo format
+    /** chuẩn hóa ngày theo format
      * default: dd/mm/yyyy
      */
     formatDate(date, type = "en-GB") {
-      if (date) {
-        let formatDate = new Date(date);
-        formatDate = formatDate.toLocaleDateString(type);
-        return formatDate;
-      }
-      return "";
+      return BaseFunction.formatDate(date, type);
     },
 
+    // trả về danh sách nhân viên được chọn
+    getListChecked() {
+      return this.checkedEmployee;
+    },
+
+    // hiển thị combobox các hành động
     showActionList(emp, event) {
       this.selectedRow = emp;
       let dropdownButton = event.target.getBoundingClientRect();
@@ -166,6 +195,10 @@ export default {
       this.dropdownLeft = dropdownButton.left - 80;
       this.$refs.myActionList.showCombobox();
     },
+  },
+
+  updated() {
+    console.log("checked: ", this.checkedEmployee);
   },
 };
 </script>

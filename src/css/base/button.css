@@ -11,7 +11,7 @@
 /* action button: add, delete, fix, reload */
 .edit-employee-btn {
   margin-right: 6px;
-  font-weight: 600;
+  
 }
 
 .edit-employee-btn:hover {
@@ -53,6 +53,11 @@
 }
 .primary-btn:active {
   background-color: var(--primary-color);
+}
+
+.primary-btn:disabled {
+  cursor: not-allowed;
+  background-color: gray;
 }
 
 .second-btn {

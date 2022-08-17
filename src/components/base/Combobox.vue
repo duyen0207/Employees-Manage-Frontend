@@ -1,8 +1,5 @@
 <template lang="">
   <span class="action-combobox">
-    <!-- <button class="select-selected border-icon-combobox" @click="showCombobox">
-      <font-awesome-icon icon="fa-solid fa-caret-down"></font-awesome-icon>
-    </button> -->
     <ul class="select-items" v-show="isShowCombobox"
       :style="{top: `${positionTop}px`, left: `${positionLeft}px`}"
     >

@@ -26,20 +26,31 @@
     <div class="content">
       <!-- search input and reload button----------------------->
       <div class="content-header rows-flexbox">
-        <input
-          id="input-search-employee"
-          class="primary-input icon-input"
-          type="text"
-          placeholder="Tìm kiếm theo mã, tên nhân viên"
-          v-model="searchPattern"
-        />
-        <button id="reload-data" class="none-btn" @click="employeesInPage">
-          <font-awesome-icon icon="fa-solid fa-arrow-rotate-right" />
+        <button
+          class="primary-btn"
+          :disabled="checkedRowsList.length == 0"
+          @click="btnShowDialog(DialogType.DELETE_CONFIRM__DIALOG, null)"
+        >
+          Thực hiện hàng loạt
         </button>
+        <div class="rows-flexbox">
+          <input
+            id="input-search-employee"
+            class="primary-input icon-input"
+            type="text"
+            placeholder="Tìm kiếm theo mã, tên nhân viên"
+            v-model="searchPattern"
+          />
+          <button id="reload-data" class="none-btn" @click="employeesInPage">
+            <font-awesome-icon icon="fa-solid fa-arrow-rotate-right" />
+          </button>
+        </div>
       </div>
       <!-- Data table ------------------------------------------->
       <DTable
+        ref="employeeTable"
         v-model:employees="employees"
+        @checkRow="getCheckedList"
         @rowEdit="btnShowForm"
         @rowDuplicate="btnNewDuplicateOnClick"
         @rowDelete="btnShowDialog"
@@ -82,6 +93,33 @@ import DTable from "@/components/base/Table.vue";
 import DPagination from "@/components/base/Pagination.vue";
 import DForm from "@/components/base/Form.vue";
 
+/** Enum loại hành động
+ * ADD: thêm mới nhân viên
+ * EDIT: sửa nhân viên
+ * DELETE: xóa một nhân viên
+ * DELETE_MULTIPLE: xóa hàng loạt
+ * DUPLICATE: nhân bản
+ */
+export const ActionType = {
+  ADD: "0",
+  EDIT: "1",
+  DELETE: "2",
+  DELETE_MULTIPLE: "3",
+  DUPLICATE: "4"
+};
+
+/** Enum loại dialog
+ * type = 0: error dialog
+ * type = 1: success dialog
+ * type = 2: confirm save dialog
+ * type = 3: confirm delete dialog
+ */
+const DialogType = {
+  ERROR_DIALOG: "0",
+  SUCCESS_DIALOG: "1",
+  SAVE_CONFIRM_DIALOG: "2",
+  DELETE_CONFIRM__DIALOG: "3",
+};
 
 export default {
   name: "TheContent",
@@ -96,22 +134,44 @@ export default {
   data() {
     return {
       employees: [],
-      // myFormData: dùng để lưu dữ liệu từ form component
+      // myFormData: lưu dữ liệu từ form component
       myFormData: Object,
 
+      /** Phân trang
+       * totalRecords: tổng số bản ghi
+       * totalPages: tổng số trang
+       * pageNumber: chỉ mục trang
+       * pageSize: số bản ghi trên một trang
+       */
       totalRecords: 0,
       totalPages: 0,
       pageNumber: 1,
       pageSize: "10",
 
+      /**
+       * searchPattern: từ khóa tìm kiếm
+       * chosenEmployeeId: nhân viên được chọn để sửa, nhân bản hoặc xóa
+       * checkedRowsList[]: danh sách hàng được chọn trong bảng dữ liệu
+       */
       searchPattern: "",
       chosenEmployeeId: null,
+      checkedRowsList: [],
 
+      /**
+       * isShowForm: bật tắt form thông tin nhân viên
+       * saveAndNewMode: bật tắt chế độ "cất và thêm mới" (mặc định tắt)
+       */
       isShowForm: false,
       saveAndNewMode: false,
 
+      /**
+       * dialogMsg: nội dung của dialog
+       * dialogType: loại dialog hiển thị: thông báo lỗi, thông báo thành công, confirm
+       * DialogType: enum thể hiện type của dialog
+       */
       dialogMsg: ["Thêm mới thành công"],
-      dialogType: "2",
+      dialogType: DialogType.SUCCESS_DIALOG,
+      DialogType,
 
       // custom action combobox
       selectOptions: [
@@ -136,7 +196,7 @@ export default {
     // TÌM KIẾM
     searchPattern() {
       this.pageNumber = 1;
-      this.searchEmployee();
+      this.employeesInPage();
     },
 
     // khi page number thay đổi, gọi hàm load dữ liệu
@@ -152,59 +212,26 @@ export default {
   },
 
   methods: {
-    /**
-     * chuẩn hóa ngày theo format
-     * default: dd/mm/yyyy
-     */
-    formatDate(date, type = "en-GB") {
-      if (date) {
-        let formatDate = new Date(date);
-        formatDate = formatDate.toLocaleDateString(type);
-        return formatDate;
-      }
-      return "";
-    },
-
-    // ktra giới tính
-    setGenderName(gender) {
-      let genderName = "";
-      if (gender == "1") {
-        genderName = "Nam";
-      } else if (gender == "2") {
-        genderName = "Nữ";
-      } else if (gender == "3") {
-        genderName = "Khác";
-      }
-      return genderName;
-    },
-
-    // tìm kiếm
-    searchEmployee() {
+    // load danh sách nv theo trang, tìm kiếm
+    employeesInPage() {
       try {
-        // console.log("Searching...", newSearchPattern);
-        let searchURL = `${BaseFunction.SERVER_API_URL}/filter?pageSize=${this.pageSize}&pageNumber=${this.pageNumber}&employeeFilter=${this.searchPattern}`;
+        let paginateURL = `${BaseFunction.SERVER_API_URL}/filter?pageSize=${this.pageSize}&pageNumber=${this.pageNumber}&employeeFilter=${this.searchPattern}`;
 
         var me = this;
         // gọi api search
         axios
-          .get(searchURL)
+          .get(paginateURL)
           .then(function (res) {
-            if (res.data.Data) {
-              me.employees = res.data.Data;
-              me.totalPages = res.data.TotalPage;
-              me.totalRecords = res.data.TotalRecord;
-            } else if (!res.data.Data) {
-              me.employees = [];
-              me.totalPages = 1;
-              me.totalRecords = 0;
-            }
-            console.log("search result: ", me.employees);
+            me.employees = res.data.Data;
+            console.log(res);
+            me.totalPages = res.data.TotalPage;
+            me.totalRecords = res.data.TotalRecord;
           })
           .catch(function (res) {
             console.log(res);
           });
       } catch (error) {
-        console.log("lỗi khi search: ", error);
+        console.log("lỗi khi lọc: ", error);
       }
     },
 
@@ -229,29 +256,6 @@ export default {
       }
     },
 
-    // load danh sách nv theo trang
-    employeesInPage() {
-      try {
-        let paginateURL = `${BaseFunction.SERVER_API_URL}/filter?pageSize=${this.pageSize}&pageNumber=${this.pageNumber}`;
-
-        var me = this;
-        // gọi api search
-        axios
-          .get(paginateURL)
-          .then(function (res) {
-            me.employees = res.data.Data;
-
-            me.totalPages = res.data.TotalPage;
-            me.totalRecords = res.data.TotalRecord;
-          })
-          .catch(function (res) {
-            console.log(res);
-          });
-      } catch (error) {
-        console.log("lỗi khi lọc: ", error);
-      }
-    },
-
     // lựa chọn emp id để thực hiện các hành động như sửa, xóa
     setChosenEmpId(employeeId) {
       if (employeeId) {
@@ -268,50 +272,6 @@ export default {
     },
 
     // validate---------------------------------------------
-    // validate date
-    validateDate(date) {
-      let checkDate = true;
-      let errorMsg = "Ngày không tồn tại.\n";
-      if (date) {
-        const dateFormat = new Date(date);
-
-        let year = dateFormat.getFullYear();
-        let day = dateFormat.getDate();
-        let month = dateFormat.getMonth() + 1;
-
-        // kiểm tra ngày có tồn tại không
-        if (day > 31 || month > 12 || day < 1 || month < 1) return false;
-        else {
-          // năm nhuận
-          if (year % 4 == 0) {
-            if (month == 2 && day > 29) checkDate = false;
-          } else {
-            let numDays = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-            if (day > numDays[month]) checkDate = false;
-          }
-        }
-
-        // kiểm tra ngày có hợp lệ không
-        let today = new Date();
-        if (dateFormat.getTime() > today.getTime()) {
-          checkDate = false;
-          errorMsg = "Ngày không được lớn hơn thời điểm hiện tại.\n";
-        }
-      } else checkDate = false;
-
-      return {
-        check: checkDate,
-        errorMsg: errorMsg,
-      };
-    },
-
-    // validate email
-    validateEmail(email) {
-      var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-      return re.test(email);
-    },
-
     // validate when click save
     validateOnclick(data) {
       let errorInfo = [];
@@ -323,7 +283,7 @@ export default {
         errorInfo.push("- Mã nhân viên không được để trống.\n");
       }
 
-      if (!data.EmployeeName) {
+      if (!data.FullName) {
         check = false;
         errorInfo.push("- Tên nhân viên không được để trống.\n");
       }
@@ -334,13 +294,13 @@ export default {
       }
 
       // check date field-------------------------------------------------
-      let dobValid = this.validateDate(data.DateOfBirth);
+      let dobValid = BaseFunction.validateDate(data.DateOfBirth);
       if (!dobValid.check) {
         check = false;
         errorInfo.push("- Ngày sinh: " + dobValid.errorMsg);
       }
 
-      let idDateValid = this.validateDate(data.IdentityDate);
+      let idDateValid = BaseFunction.validateDate(data.IdentityDate);
       if (!idDateValid.check) {
         check = false;
         errorInfo.push("- Ngày cấp CMND: " + idDateValid.errorMsg);
@@ -348,7 +308,7 @@ export default {
 
       // check email-----------------------------------------------------
       if (data.Email) {
-        if (!this.validateEmail(data.Email)) {
+        if (!BaseFunction.validateEmail(data.Email)) {
           check = false;
           errorInfo.push("- Email không đúng định dạng.\n");
         }
@@ -360,9 +320,13 @@ export default {
       };
     },
 
-    // -----------------------------------------------------
-    //  hiển thị form sửa hoặc thêm mới
-    // duplicate: kiểm tra nếu là chế độ nhân bản
+    // Hiển thị form -----------------------------------------------------
+    
+    /** các chế độ:
+     * thêm mới: lấy sẵn mã nhân viên mới
+     * sửa: hiển thị thông tin nhân viên lên form
+     * nhân bản: hiển thị thông tin nhân viên và lấy sẵn mã mới
+     */
     btnShowForm(employeeId = null, duplicate = false) {
       this.isShowForm = true;
       if (!employeeId) {
@@ -382,7 +346,7 @@ export default {
       }
     },
 
-    // đóng form thông tin
+    // đóng form
     btnOnCloseForm() {
       // reset lại mọi thứ
       this.saveAndNewMode = false;
@@ -393,36 +357,48 @@ export default {
       this.isShowForm = false;
     },
 
-    /**
-     * show các dialog, default: thông báo success
-     * type = 0: error dialog
-     * type = 1: success dialog
-     * type = 2: confirm save dialog
-     * type = 3: confirm delete dialog
+    /** show các dialog, default: thông báo success
      */
-    btnShowDialog(type = "0", emp) {
+    btnShowDialog(type = this.DialogType.ERROR_DIALOG, emp) {
       // chọn loại dialog
       this.dialogType = type;
       // thêm lời nhắn
-      // confirm if delete
-      if (type == "3") {
+
+      // confirm if delete-----------------------------------------------
+      if (type == this.DialogType.DELETE_CONFIRM__DIALOG) {
         this.dialogMsg = [
           `Bạn có chắc chắc muốn xóa nhân viên có mã <${emp.EmployeeCode}> không?`,
         ];
         this.setChosenEmpId(emp.EmployeeId);
       }
-      // confirm if save
-      else if (type == "2") {
+      // confirm if save-------------------------------------------------
+      else if (type == this.DialogType.SAVE_CONFIRM_DIALOG) {
         this.dialogMsg = ["Dữ liệu đã bị thay đổi, bạn có muốn cất không?"];
       }
 
-      // hiển thị dialog
+      // hiển thị dialog------------------------------------------------
       console.log("hiển thị dialog", this);
       this.$refs.notifDialog.showDialog();
     },
 
-    /**
-     * CÁC CHỨC NĂNG THÊM, SỬA, XÓA------------------------------------------------------------
+    // sau khi đóng dialog: tùy vào chọn thêm sửa xóa hay nhân bản mà thực
+    // hiện các hành động tiếp theo
+    btnAfterCloseDialog() {
+      if (this.dialogType == this.DialogType.SUCCESS_DIALOG) {
+        if (this.saveAndNewMode == false) {
+          this.btnOnCloseForm();
+        } else if (this.saveAndNewMode == true) {
+          // reset lại form
+          this.$refs.myForm.resetForm();
+
+          // lấy mã nhân viên mới
+          this.$refs.myForm.getNewCode();
+          this.saveAndNewMode = false;
+        }
+      }
+    },
+
+    /**CÁC CHỨC NĂNG THÊM, SỬA, XÓA------------------------------------------------------------
      */
 
     // Sửa
@@ -430,7 +406,7 @@ export default {
       // console.log("sau khi form đc set gender: ",this.formData.Gender, this.formData.GenderName);
       console.log("add và edit, kiểm tra my form data: ", this.myFormData);
       let employee = this.myFormData;
-      employee.GenderName = this.setGenderName(employee.Gender);
+      employee.GenderName = BaseFunction.setGenderName(employee.Gender);
 
       var me = this;
       let requestURL = `${BaseFunction.SERVER_API_URL}`;
@@ -457,7 +433,7 @@ export default {
           } else {
             me.dialogMsg = ["Sửa nhân viên thành công."];
           }
-          me.btnShowDialog("1");
+          me.btnShowDialog(this.DialogType.SUCCESS_DIALOG);
           // reset choosen emp id
           me.resetChosenEmployeeId();
           // load lại bảng
@@ -471,7 +447,7 @@ export default {
           );
           // hiển thị thông báo lỗi
           me.dialogMsg = [error.response.data.userMsg];
-          me.btnShowDialog("0");
+          me.btnShowDialog(this.DialogType.ERROR_DIALOG);
         });
     },
 
@@ -490,7 +466,7 @@ export default {
       if (!validate.check) {
         console.log("Dữ liệu không hợp lệ ", validate.errorInfo);
         this.dialogMsg = validate.errorInfo;
-        this.btnShowDialog("0", null);
+        this.btnShowDialog(this.DialogType.ERROR_DIALOG, null);
       }
       // nếu dữ liệu hợp lệ
       else {
@@ -502,7 +478,7 @@ export default {
         // nếu sửa
         else {
           this.apiMethod = "put";
-          this.btnShowDialog("2");
+          this.btnShowDialog(this.DialogType.SAVE_CONFIRM_DIALOG);
         }
       }
     },
@@ -511,49 +487,67 @@ export default {
       this.btnSaveOnClick(formData, true);
     },
 
-    // sau khi đóng dialog
-    btnAfterCloseDialog() {
-      if (this.dialogType == "1") {
-        if (this.saveAndNewMode == false) {
-          this.btnOnCloseForm();
-        } else if (this.saveAndNewMode == true) {
-          // reset lại form
-          this.$refs.myForm.resetForm();
+    // XÓA
+    // deleteType: loại xóa: xóa hàng loạt hay xóa đơn lẻ
+    // 0: xóa 1 nhân viên
+    // 1: xóa hàng loạt
+    btnDeleteOnClick(deleteType = "0") {
+      if (deleteType == "0") {
+        if (this.chosenEmployeeId) {
+          try {
+            var me = this;
+            const deleteURL = `${BaseFunction.SERVER_API_URL}/${this.chosenEmployeeId}`;
+            // gọi api
+            axios
+              .delete(deleteURL)
+              .then(function (res) {
+                console.log("xóa thành công: ", res);
+                console.log(res.data);
+                me.employeesInPage();
 
-          // lấy mã nhân viên mới
-          this.$refs.myForm.getNewCode();
-          this.saveAndNewMode = false;
+                // reset emp id
+                me.resetChosenEmployeeId();
+                me.dialogMsg = ["Xóa thành công."];
+                me.btnShowDialog(this.DialogType.SUCCESS_DIALOG);
+              })
+              .catch(function (error) {
+                console.log("không xóa được. server trả về: ", error);
+              });
+          } catch (error) {
+            console.log("lỗi khi xóa: ", error);
+          }
+        } else {
+          console.log("Phải biết id thì ms xóa đc chứ!!");
         }
+      } else if (deleteType == "1") {
+        this.deleteMultiple();
       }
     },
 
-    // XÓA
-    btnDeleteOnClick() {
-      if (this.chosenEmployeeId) {
+    // chọn hàng loạt để thực hiện chức năng xóa
+    getCheckedList(checkedEmployee) {
+      this.checkedRowsList = checkedEmployee;
+      if (this.checkedRowsList.length == 0) console.log("oh nâuuuuuu");
+    },
+    // xóa hàng loạt
+    deleteMultiple() {
+      console.log("xóa hàng loạt đây nnef.");
+      if (this.checkedRowsList.length > 0) {
         try {
           var me = this;
-          const deleteURL = `${BaseFunction.SERVER_API_URL}/${this.chosenEmployeeId}`;
-          // gọi api
-          axios
-            .delete(deleteURL)
+          axios({
+            method: "delete",
+            url: BaseFunction.SERVER_API_URL,
+            data: me.checkedRowsList,
+            headers: {
+              "Content-Type": "application/json; charset=UTF-8",
+            },
+          })
             .then(function (res) {
-              console.log("xóa thành công: ", res);
-              console.log(res.data);
-              me.employeesInPage();
-
-              // reset emp id
-              me.resetChosenEmployeeId();
-              me.dialogMsg = ["Xóa thành công."];
-              me.btnShowDialog("1");
+              console.log("xóa hàng loạt thành công.", res);
             })
-            .catch(function (error) {
-              console.log("không xóa được. server trả về: ", error);
-            });
-        } catch (error) {
-          console.log("lỗi khi xóa: ", error);
-        }
-      } else {
-        console.log("Phải biết id thì ms xóa đc chứ!!");
+            .catch((res) => console.log(res));
+        } catch (error) {}
       }
     },
 
@@ -582,7 +576,9 @@ export default {
   beforeUpdate() {},
 
   // updated
-  updated() {},
+  updated() {
+    console.log("table222222222222", this.checkedEmployee);
+  },
 };
 </script>
 <style lang="css">
