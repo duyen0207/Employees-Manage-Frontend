@@ -349,12 +349,6 @@ export default {
     };
   },
 
-  watch: {
-    formData(){
-      console.log("form thay đổi: ",this.formData.DateOfBirth);
-    }
-  },
-
   methods: {
     /**
      * chuẩn hóa ngày theo format

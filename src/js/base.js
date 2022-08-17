@@ -23,8 +23,6 @@ export function setGenderName(gender) {
   } else if (gender == "2") {
     genderName = "Khác";
   }
-  console.log("gender: ", gender, genderName);
-
   return genderName;
 }
 

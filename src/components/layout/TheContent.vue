@@ -14,7 +14,7 @@
     <div class="content-header rows-flexbox">
       <h2 class="content-title">Nhân viên</h2>
       <button
-        @click="btnShowForm(null)"
+        @click="btnShowForm(ActionType.ADD, null)"
         id="add-new-emp-btn"
         class="primary-btn"
       >
@@ -51,8 +51,8 @@
         ref="employeeTable"
         v-model:employees="employees"
         @checkRow="getCheckedList"
-        @rowEdit="btnShowForm"
-        @rowDuplicate="btnNewDuplicateOnClick"
+        @rowEdit="btnShowForm((actionType = ActionType.EDIT), $event)"
+        @rowDuplicate="btnShowForm((actionType = ActionType.DUPLICATE), $event)"
         @rowDelete="btnShowDialog"
       />
 
@@ -105,7 +105,7 @@ export const ActionType = {
   EDIT: "1",
   DELETE: "2",
   DELETE_MULTIPLE: "3",
-  DUPLICATE: "4"
+  DUPLICATE: "4",
 };
 
 /** Enum loại dialog
@@ -172,6 +172,7 @@ export default {
       dialogMsg: ["Thêm mới thành công"],
       dialogType: DialogType.SUCCESS_DIALOG,
       DialogType,
+      ActionType,
 
       // custom action combobox
       selectOptions: [
@@ -321,29 +322,37 @@ export default {
     },
 
     // Hiển thị form -----------------------------------------------------
-    
+
     /** các chế độ:
      * thêm mới: lấy sẵn mã nhân viên mới
      * sửa: hiển thị thông tin nhân viên lên form
      * nhân bản: hiển thị thông tin nhân viên và lấy sẵn mã mới
      */
-    btnShowForm(employeeId = null, duplicate = false) {
+    btnShowForm(actionType = this.ActionType.ADD, employeeId) {
       this.isShowForm = true;
-      if (!employeeId) {
-        console.log("Chế độ thêm mới: ");
-        console.log("mã mới: ", this.$refs.myForm.getNewCode());
-      } else {
-        console.log(
-          "thông tin employee ",
-          this.$refs.myForm.getEmployeeInfo(employeeId)
-        );
-        if (duplicate == true) {
-          console.log("Chế độ nhân bản");
-          this.$refs.myForm.getNewCode();
-        }
-        // chọn employee
-        this.setChosenEmpId(employeeId);
+      console.log("loại hành động: ", actionType);
+
+      // B1: nếu là SỬA hoặc NHÂN BẢN, hiển thị nhân viên lên form
+      if (
+        actionType == this.ActionType.EDIT ||
+        actionType == this.ActionType.DUPLICATE
+      ) {
+        // kiểm tra mã có bị null không
+        if (employeeId) this.$refs.myForm.getEmployeeInfo(employeeId);
+        else
+          console.log("Hiển thị form lỗi do id nhân viên chưa được truyền vào");
       }
+
+      // B2: nếu là NHÂN BẢN hoặc THÊM MỚI, lấy mã nhân viên mới
+      if (
+        actionType == this.ActionType.DUPLICATE ||
+        actionType == this.ActionType.ADD
+      )
+        this.$refs.myForm.getNewCode();
+
+      // B3: nếu là SỬA: setChosenEmpId là id truyền vào
+      if (actionType == this.ActionType.EDIT) this.setChosenEmpId(employeeId);
+      else this.resetChosenEmployeeId();
     },
 
     // đóng form
@@ -550,15 +559,6 @@ export default {
         } catch (error) {}
       }
     },
-
-    // NHÂN BẢN
-    btnNewDuplicateOnClick(employeeId) {
-      // get thông tin của employee để đẩy lên form
-      this.btnShowForm(employeeId, true);
-      this.resetChosenEmployeeId();
-      // lấy mã nhân viên mới và đẩy lên form
-      // this.$refs.myForm.getNewCode();
-    },
   },
 
   //before create, created
@@ -576,9 +576,7 @@ export default {
   beforeUpdate() {},
 
   // updated
-  updated() {
-    console.log("table222222222222", this.checkedEmployee);
-  },
+  updated() {},
 };
 </script>
 <style lang="css">
