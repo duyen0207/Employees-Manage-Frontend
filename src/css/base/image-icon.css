@@ -231,3 +231,11 @@
 .main-menu > .normal-box:hover .analysis-icon {
   background-position: -251px -1667px;
 }
+
+/* excel icon */
+.excel-icon {
+  background-position: -705px -202px;
+}
+.excel-icon:hover {
+  background-position: -705px -258px;
+}

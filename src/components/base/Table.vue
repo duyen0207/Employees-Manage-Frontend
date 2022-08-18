@@ -6,6 +6,7 @@
           <th class="checkbox-column">
             <label class="custom-checkbox-container">
               <input
+                ref="checkAll"
                 type="checkbox"
                 class="input-check-all"
                 v-model="selectAll"
@@ -40,10 +41,18 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="emp in employees" :key="emp.EmployeeId" :id="emp.EmployeeId" class="data-row">
-          <td class="checkbox-column">
+        <tr
+          v-for="(emp, index) in employees"
+          :key="index"
+          ref="employeeRow"
+          :class="[isChecked(index) ? 'checked-row' : '', 'data-row']"
+        >
+          <td
+            :class="[isChecked(index) ? 'checked-row' : '', 'checkbox-column']"
+          >
             <label class="custom-checkbox-container">
               <input
+                ref="checkboxRow"
                 type="checkbox"
                 class="input-check-item"
                 :value="emp.EmployeeId"
@@ -72,7 +81,12 @@
           <td class="position-column">{{ emp.BankName }}</td>
           <td class="position-column">{{ emp.BankBranchName }}</td>
 
-          <td class="action-column fixed-column-container">
+          <td
+            :class="[
+              isChecked(index) ? 'checked-row' : '',
+              'action-column fixed-column-container',
+            ]"
+          >
             <button
               data-employee-id="{{emp.EmployeeId}}"
               class="none-btn edit-employee-btn"
@@ -143,10 +157,10 @@ export default {
   },
 
   watch: {
-    checkedEmployee(){
+    checkedEmployee() {
       this.$emit("checkRow", this.checkedEmployee);
       console.log("đã chọn xong một hàng nè");
-    }
+    },
   },
   computed: {
     // chọn tất cả nhân viên
@@ -187,6 +201,20 @@ export default {
       return this.checkedEmployee;
     },
 
+    // đổi màu hàng được chọn
+    isChecked(index) {
+      if (this.$refs.employeeRow) {
+        if (this.$refs.checkAll.checked == true) return true;
+        else if (
+          this.$refs.checkboxRow[index].checked == true &&
+          this.checkedEmployee.length > 0
+        )
+          return true;
+        else return false;
+      }
+      return false;
+    },
+
     // hiển thị combobox các hành động
     showActionList(emp, event) {
       this.selectedRow = emp;
@@ -196,6 +224,8 @@ export default {
       this.$refs.myActionList.showCombobox();
     },
   },
+
+  mounted() {},
 
   updated() {
     console.log("checked: ", this.checkedEmployee);

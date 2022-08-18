@@ -37,7 +37,7 @@
             )
           "
         >
-          Thực hiện hàng loạt
+          Xóa hàng loạt
         </button>
         <div class="rows-flexbox">
           <input
@@ -49,6 +49,9 @@
           />
           <button id="reload-data" class="none-btn" @click="employeesInPage">
             <font-awesome-icon icon="fa-solid fa-arrow-rotate-right" />
+          </button>
+          <button id="export-data" class="none-btn" @click="btnExportExcel">
+            <div class="nav-icon m-icon m-icon-sz24 excel-icon"></div>
           </button>
         </div>
       </div>
@@ -244,6 +247,168 @@ export default {
       }
     },
 
+    /**CÁC CHỨC NĂNG THÊM, SỬA, XÓA, XUẤT EXCEL------------------------------------------------------------
+     */
+
+    // Sửa
+    addOrEdit() {
+      console.log("api method is: ", this.apiMethod);
+      // console.log("sau khi form đc set gender: ",this.formData.Gender, this.formData.GenderName);
+      console.log("add và edit, kiểm tra my form data: ", this.myFormData);
+      let employee = this.myFormData;
+      employee.GenderName = BaseFunction.setGenderName(employee.Gender);
+
+      var me = this;
+      let requestURL = `${BaseFunction.SERVER_API_URL}`;
+
+      // nếu đang ở trạng thái sửa
+      if (this.chosenEmployeeId) {
+        requestURL = `${BaseFunction.SERVER_API_URL}/${this.chosenEmployeeId}`;
+      }
+
+      axios({
+        method: this.apiMethod,
+        url: requestURL,
+        data: employee,
+        headers: {
+          "Content-Type": "application/json; charset=UTF-8",
+        },
+      })
+        .then(function (res) {
+          console.log("thành công: ", res);
+
+          // hiển thị thông báo thành công
+          if (me.apiMethod == "post") {
+            me.dialogMsg = ["Thêm mới nhân viên thành công."];
+          } else {
+            me.dialogMsg = ["Sửa nhân viên thành công."];
+          }
+          me.btnShowDialog(me.DialogType.SUCCESS_DIALOG);
+          // reset choosen emp id
+          me.resetChosenEmployeeId();
+          // load lại bảng
+          me.employeesInPage();
+        })
+        .catch(function (error) {
+          console.log(
+            "Lỗi khi lưu, sửa bản ghi: ",
+            error,
+            error.response.devMsg
+          );
+          // hiển thị thông báo lỗi
+          me.dialogMsg = [error.response.data.devMsg];
+          me.btnShowDialog(me.DialogType.ERROR_DIALOG);
+        });
+    },
+
+    // CẤT
+    // saveAndNewMode: kiểm tra là nút "cất" hay nút "cất và thêm mới"
+    btnSaveOnClick(formData, saveAndNewMode = false) {
+      // nếu chọn cất và thêm
+      if (saveAndNewMode == true) {
+        this.saveAndNewMode = saveAndNewMode;
+      }
+      // lấy dữ liệu từ form
+      this.myFormData = formData;
+      const employee = formData;
+      // validate
+      let validate = this.validateOnclick(employee);
+      if (!validate.check) {
+        console.log("Dữ liệu không hợp lệ ", validate.errorInfo);
+        this.dialogMsg = validate.errorInfo;
+        // thông báo lỗi cho người dùng
+        this.btnShowDialog(this.DialogType.ERROR_DIALOG, null);
+      }
+      // nếu dữ liệu hợp lệ
+      else {
+        // nếu thêm mới
+        if (!this.chosenEmployeeId) {
+          this.apiMethod = "post";
+          this.addOrEdit();
+        }
+        // nếu sửa
+        else {
+          this.apiMethod = "put";
+          this.btnShowDialog(this.DialogType.SAVE_CONFIRM_DIALOG);
+        }
+      }
+    },
+    // CẤT VÀ THÊM MỚI
+    btnSaveAndNew(formData) {
+      this.btnSaveOnClick(formData, true);
+    },
+
+    /** XÓA: 2 chế độ
+     * deleteType: loại xóa: xóa hàng loạt hay xóa đơn lẻ
+     * DELETE: xóa 1 nhân viên
+     * DELETE_MULTIPLE: xóa hàng loạt
+     */
+    btnDeleteOnClick() {
+      // lưu con trỏ this
+      var me = this;
+      var data = null;
+      var url = null;
+
+      // B1: set url-------------------------------------------
+      if (this.deleteType == this.ActionType.DELETE) {
+        if (this.chosenEmployeeId)
+          url = `${BaseFunction.SERVER_API_URL}/${this.chosenEmployeeId}`;
+        else console.log("Phải biết id thì ms xóa đc chứ!!");
+      }
+      // nếu là xóa hàng loạt
+      else if (this.deleteType == this.ActionType.DELETE_MULTIPLE) {
+        url = BaseFunction.SERVER_API_URL;
+        if (this.checkedRowsList.length > 0) data = me.checkedRowsList;
+        else console.log("Không thể xóa hàng loạt được, danh sách rỗng");
+      }
+
+      // B2: gọi api------------------------------------------------------
+      try {
+        const deleteURL = url;
+        axios({
+          method: "delete",
+          url: deleteURL,
+          data: data,
+          headers: {
+            "Content-Type": "application/json; charset=UTF-8",
+          },
+        })
+          .then(function (res) {
+            console.log("xóa thành công.", res);
+            // load lại trang khi xóa thành công
+            me.employeesInPage();
+
+            // reset emp id, checked list
+            me.resetChosenEmployeeId();
+            me.checkedRowsList = [];
+
+            me.dialogMsg = ["Xóa thành công."];
+            me.btnShowDialog(me.DialogType.SUCCESS_DIALOG);
+          })
+          .catch(function (error) {
+            console.log("không xóa được. server trả về: ", error);
+          });
+      } catch (error) {
+        console.log("Try catch - Lỗi khi xóa: ", error);
+      }
+    },
+
+    // XUẤT DANH SÁCH RA FILE EXCEL
+    btnExportExcel() {
+      try {
+        var me = this;
+
+        // gọi api export dữ liệu
+        console.log("export thành công.");
+      } catch (error) {}
+    },
+
+    // chọn hàng loạt để thực hiện chức năng xóa
+    getCheckedList(checkedEmployee) {
+      this.checkedRowsList = checkedEmployee;
+      // if (this.checkedRowsList.length == 0) console.log("oh nâuuuuuu");
+    },
+
     // gọi api load toàn bộ dữ liệu
     loadData() {
       try {
@@ -398,7 +563,7 @@ export default {
         // xóa hàng loạt
         else if (this.deleteType == this.ActionType.DELETE_MULTIPLE) {
           this.dialogMsg = [
-            "Bạn có chắc chắc muốn xóa hàng loạt nhân viên đã chọn không?",
+            `Bạn có chắc chắc muốn xóa ${emp.length} nhân viên đã chọn không?`,
           ];
         }
       }
@@ -427,158 +592,6 @@ export default {
           this.saveAndNewMode = false;
         }
       }
-    },
-
-    /**CÁC CHỨC NĂNG THÊM, SỬA, XÓA------------------------------------------------------------
-     */
-
-    // Sửa
-    addOrEdit() {
-      console.log("api method is: ", this.apiMethod);
-      // console.log("sau khi form đc set gender: ",this.formData.Gender, this.formData.GenderName);
-      console.log("add và edit, kiểm tra my form data: ", this.myFormData);
-      let employee = this.myFormData;
-      employee.GenderName = BaseFunction.setGenderName(employee.Gender);
-
-      var me = this;
-      let requestURL = `${BaseFunction.SERVER_API_URL}`;
-
-      // nếu đang ở trạng thái sửa
-      if (this.chosenEmployeeId) {
-        requestURL = `${BaseFunction.SERVER_API_URL}/${this.chosenEmployeeId}`;
-      }
-
-      axios({
-        method: this.apiMethod,
-        url: requestURL,
-        data: employee,
-        headers: {
-          "Content-Type": "application/json; charset=UTF-8",
-        },
-      })
-        .then(function (res) {
-          console.log("thành công: ", res);
-
-          // hiển thị thông báo thành công
-          if (me.apiMethod == "post") {
-            me.dialogMsg = ["Thêm mới nhân viên thành công."];
-          } else {
-            me.dialogMsg = ["Sửa nhân viên thành công."];
-          }
-          me.btnShowDialog(me.DialogType.SUCCESS_DIALOG);
-          // reset choosen emp id
-          me.resetChosenEmployeeId();
-          // load lại bảng
-          me.employeesInPage();
-        })
-        .catch(function (error) {
-          console.log(
-            "Lỗi khi lưu, sửa bản ghi: ",
-            error,
-            error.response.devMsg
-          );
-          // hiển thị thông báo lỗi
-          me.dialogMsg = [error.response.data.devMsg];
-          me.btnShowDialog(me.DialogType.ERROR_DIALOG);
-        });
-    },
-
-    // CẤT
-    // saveAndNewMode: kiểm tra là nút "cất" hay nút "cất và thêm mới"
-    btnSaveOnClick(formData, saveAndNewMode = false) {
-      // nếu chọn cất và thêm
-      if (saveAndNewMode == true) {
-        this.saveAndNewMode = saveAndNewMode;
-      }
-      // lấy dữ liệu từ form
-      this.myFormData = formData;
-      const employee = formData;
-      // validate
-      let validate = this.validateOnclick(employee);
-      if (!validate.check) {
-        console.log("Dữ liệu không hợp lệ ", validate.errorInfo);
-        this.dialogMsg = validate.errorInfo;
-        // thông báo lỗi cho người dùng
-        this.btnShowDialog(this.DialogType.ERROR_DIALOG, null);
-      }
-      // nếu dữ liệu hợp lệ
-      else {
-        // nếu thêm mới
-        if (!this.chosenEmployeeId) {
-          this.apiMethod = "post";
-          this.addOrEdit();
-        }
-        // nếu sửa
-        else {
-          this.apiMethod = "put";
-          this.btnShowDialog(this.DialogType.SAVE_CONFIRM_DIALOG);
-        }
-      }
-    },
-    // CẤT VÀ THÊM MỚI
-    btnSaveAndNew(formData) {
-      this.btnSaveOnClick(formData, true);
-    },
-
-    /** XÓA: 2 chế độ
-     * deleteType: loại xóa: xóa hàng loạt hay xóa đơn lẻ
-     * DELETE: xóa 1 nhân viên
-     * DELETE_MULTIPLE: xóa hàng loạt
-     */
-    btnDeleteOnClick() {
-      // lưu con trỏ this
-      var me = this;
-      var data = null;
-      var url = null;
-
-      // B1: set url-------------------------------------------
-      if (this.deleteType == this.ActionType.DELETE) {
-        if (this.chosenEmployeeId)
-          url = `${BaseFunction.SERVER_API_URL}/${this.chosenEmployeeId}`;
-        else console.log("Phải biết id thì ms xóa đc chứ!!");
-      }
-      // nếu là xóa hàng loạt
-      else if (this.deleteType == this.ActionType.DELETE_MULTIPLE) {
-        url = BaseFunction.SERVER_API_URL;
-        if (this.checkedRowsList.length > 0) data = me.checkedRowsList;
-        else console.log("Không thể xóa hàng loạt được, danh sách rỗng");
-      }
-
-      // B2: gọi api------------------------------------------------------
-      try {
-        const deleteURL = url;
-        axios({
-          method: "delete",
-          url: deleteURL,
-          data: data,
-          headers: {
-            "Content-Type": "application/json; charset=UTF-8",
-          },
-        })
-          .then(function (res) {
-            console.log("xóa thành công.", res);
-            // load lại trang khi xóa thành công
-            me.employeesInPage();
-
-            // reset emp id, checked list
-            me.resetChosenEmployeeId();
-            me.checkedRowsList = [];
-
-            me.dialogMsg = ["Xóa thành công."];
-            me.btnShowDialog(me.DialogType.SUCCESS_DIALOG);
-          })
-          .catch(function (error) {
-            console.log("không xóa được. server trả về: ", error);
-          });
-      } catch (error) {
-        console.log("Try catch - Lỗi khi xóa: ", error);
-      }
-    },
-
-    // chọn hàng loạt để thực hiện chức năng xóa
-    getCheckedList(checkedEmployee) {
-      this.checkedRowsList = checkedEmployee;
-      // if (this.checkedRowsList.length == 0) console.log("oh nâuuuuuu");
     },
   },
 

@@ -22,6 +22,7 @@
 
   height: 50px;
   width: 100%;
+  padding-right: 10px;
   display: flex;
   justify-content: space-between;
 
@@ -58,6 +59,11 @@
 .data-table th {
   height: 42px;
 }
+
+.checked-row {
+  background-color: #e5f3ff !important;
+}
+
 /* table column------------------ */
 .data-table td,
 .data-table th {
