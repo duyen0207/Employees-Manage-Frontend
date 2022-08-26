@@ -1,7 +1,9 @@
 <template lang="">
   <span class="action-combobox">
-    <ul class="select-items" v-show="isShowCombobox"
-      :style="{top: `${positionTop}px`, left: `${positionLeft}px`}"
+    <ul
+      class="select-items"
+      v-show="isShowCombobox"
+      :style="{ top: `${positionTop}px`, left: `${positionLeft}px` }"
     >
       <li
         v-for="(option, index) in selectOptions"
@@ -14,7 +16,6 @@
   </span>
 </template>
 <script>
-
 export default {
   name: "DCombobox",
   data() {
@@ -23,18 +24,14 @@ export default {
     };
   },
   props: {
-    isShowForm: false,
-    employees: [],
-
     positionTop: 0,
     positionLeft: 0,
-    // truyền từ prop danh sách các lựa chọn, mỗi lựa chọn
-    // ở dạng object với các key là {label, clickEvent}
+    //selectOptions: truyền từ prop danh sách các lựa chọn, mỗi lựa chọn ở dạng object với các key là {label, clickEvent}
     selectOptions: Array,
   },
 
   methods: {
-    // hiển thị tùy chọn combobox
+    // bật tắt combobox
     showCombobox() {
       if (this.isShowCombobox == false) this.isShowCombobox = true;
       else this.isShowCombobox = false;

@@ -145,6 +145,7 @@ export default {
       employees: [],
       // myFormData: lưu dữ liệu từ form component
       myFormData: Object,
+      exportURL: "",
 
       /** Phân trang
        * totalRecords: tổng số bản ghi
@@ -213,11 +214,13 @@ export default {
 
     // khi page number thay đổi, gọi hàm load dữ liệu
     pageNumber(newPageNumber) {
+      this.$refs.employeeTable.checkedEmployee = [];
       if (this.searchPattern) this.searchEmployee();
       else this.employeesInPage();
     },
     // khi page size thay đổi, gọi hàm load dữ liệu
     pageSize() {
+      this.$refs.employeeTable.checkedEmployee = [];
       if (this.searchPattern) this.searchEmployee();
       else this.employeesInPage();
     },
@@ -381,6 +384,7 @@ export default {
             // reset emp id, checked list
             me.resetChosenEmployeeId();
             me.checkedRowsList = [];
+            me.$refs.employeeTable.checkedEmployee = [];
 
             me.dialogMsg = ["Xóa thành công."];
             me.btnShowDialog(me.DialogType.SUCCESS_DIALOG);
@@ -398,9 +402,31 @@ export default {
       try {
         var me = this;
 
+        axios({
+          method: "get",
+          url: `${BaseFunction.SERVER_API_URL}/export`,
+          responseType: "blob", // important binary stream
+        })
+          .then(function (res) {
+            me.exportURL = window.URL.createObjectURL(new Blob([res.data]));
+            const link = document.createElement("a");
+            link.href = me.exportURL;
+            link.setAttribute("download", "Danh_sach_nhan_vien.xlsx");
+            document.body.appendChild(link);
+            link.click();
+            URL.revokeObjectURL(link.href); // release the URL object
+            document.body.removeChild(link);
+
+            console.log("thành công: ", res);
+          })
+          .catch(function (res) {
+            console.log("Lỗi export: ", res);
+          });
         // gọi api export dữ liệu
         console.log("export thành công.");
-      } catch (error) {}
+      } catch (error) {
+        console.log("try catch: lỗi exports: ", error);
+      }
     },
 
     // chọn hàng loạt để thực hiện chức năng xóa

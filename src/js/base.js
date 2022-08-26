@@ -1,4 +1,5 @@
 export const SERVER_API_URL = "https://localhost:7024/api/v1/Employees";
+// export const SERVER_API_URL = "https://amis.manhnv.net/api/v1/Employees";
 
 export const employeeAPI = {
   getEmployees: `${SERVER_API_URL}/filter`,

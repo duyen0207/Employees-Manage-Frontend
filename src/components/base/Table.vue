@@ -204,15 +204,17 @@ export default {
     // đổi màu hàng được chọn
     isChecked(index) {
       if (this.$refs.employeeRow) {
+        console.log("checkkkkk: ",index, this.$refs.checkAll.checked);
         if (this.$refs.checkAll.checked == true) return true;
         else if (
+          this.$refs.checkboxRow[index] &&
           this.$refs.checkboxRow[index].checked == true &&
           this.checkedEmployee.length > 0
         )
           return true;
         else return false;
       }
-      return false;
+      else return false;
     },
 
     // hiển thị combobox các hành động
